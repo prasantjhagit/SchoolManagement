@@ -95,6 +95,6 @@ public class AdmissionService : IAdmissionService
                 PropertyNameCaseInsensitive = true
             });
 
-        return result?.data ?? new List<StudentModel>();
+        return result?.Data ?? new List<StudentModel>();
     }
 }
