@@ -80,7 +80,7 @@ public class AdmissionService : IAdmissionService
 
         response.EnsureSuccessStatusCode();
     }
-    public async Task<List<AdmissionDto>> GetStudents()
+    public async Task<List<StudentModel>> GetStudents()
     {
         var response = await _httpClient.GetAsync("api/AdmissionApi/GetStudents");
 
@@ -88,9 +88,13 @@ public class AdmissionService : IAdmissionService
 
         var json = await response.Content.ReadAsStringAsync();
 
-        var result = JsonSerializer.Deserialize<ApiResponse<List<AdmissionDto>>>(json,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        var result = JsonSerializer.Deserialize<ApiResponse<List<StudentModel>>>(
+            json,
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
 
-        return result.data;
+        return result?.data ?? new List<StudentModel>();
     }
 }

@@ -12,6 +12,6 @@ namespace SchoolManagement_Api.Reposirty.Admin
 
         // Optional: separate method for adding documents
         Task AddDocumentsAsync(int studentId, List<DocumentDto> documents);
-        Task<List<AdmissionDto>> GetStudents();
+        Task<List<StudentModel>> GetStudents();
     }
 }

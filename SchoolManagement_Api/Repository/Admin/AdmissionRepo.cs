@@ -105,10 +105,10 @@ namespace SchoolManagement_Api.Reposirty.Admin
 
             await _db.SaveChangesAsync();
         }
-        public async Task<List<AdmissionDto>> GetStudents()
+        public async Task<List<StudentModel>> GetStudents()
         {
             var students = await _db.Students
-                .Select(s => new AdmissionDto
+                .Select(s => new StudentModel
                 {
                     RegistrationNumber = s.RegistrationNumber,
                     SchoolCode = s.SchoolCode,
