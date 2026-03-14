@@ -7,6 +7,7 @@ namespace SchoolManagement_Ui.Service.Admin.Student
     public interface IAdmissionService
     {
         Task<int> AddNewAdmissionAsync(AdmissionDto admissionDto, IFormFile studentPhoto, List<IFormFile> documentFiles);
-        Task<List<AdmissionDto>> GetStudents();
+        
+        Task<List<StudentModel>> GetStudents();
     }
 }

@@ -15,19 +15,30 @@ namespace SchoolManagement_Ui.Controllers
             _admissionService = admissionService;
             _env = env;
         }
+
         public IActionResult DashboardPartial()
         {
             return PartialView("_DashBoard");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudents()
+        {
+            var students = await _admissionService.GetStudents();
+            return Json(students);
+        }
+
         public IActionResult StudentListPartial()
         {
 
             return PartialView("_StudentList");
         }
+
         public IActionResult Admission()
         {
             return PartialView("_StudentAdmission");
         }
+
         public IActionResult StudentAttendance()
         {
 

@@ -22,7 +22,7 @@ namespace SchoolManagement_Api.Service.Admin
            return await _repo.AddNewAdmission(admissionDto);
         }
 
-        public async Task<List<AdmissionDto>> GetStudents()
+        public async Task<List<StudentModel>> GetStudents()
         {
             return await _repo.GetStudents();
         }

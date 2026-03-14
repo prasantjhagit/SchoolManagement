@@ -130,122 +130,74 @@
         </div>
     </div>
 </div>
+
 <script>
 
-    const sections = {
+       function formatDate(dateString) {
 
-    "1":["A","B"],
-    "2":["A","B","C"],
-    "3":["A","B"],
-    "10":["A","B","C","D"]
+        if (!dateString) return "";
 
-    };
+        let date = new Date(dateString);
 
-    document.getElementById("classDropdown").addEventListener("change",function(){
+        let day = date.getDate().toString().padStart(2, '0');
+        let month = (date.getMonth() + 1).toString().padStart(2, '0');
+        let year = date.getFullYear();
 
-    let classId=this.value;
-    let section=document.getElementById("sectionDropdown");
-
-    section.innerHTML="<option value=''>Section</option>";
-
-    if(sections[classId]){
-
-    sections[classId].forEach(function(sec){
-
-    let option=document.createElement("option");
-    option.value=sec;
-    option.text=sec;
-
-    section.appendChild(option);
-
-    });
-
+        return `${day}-${month}-${year}`;
     }
 
+          
+
+    document.addEventListener("DOMContentLoaded", function () {
+        loadStudents();
     });
+
+    function formatDate(dateString) {
+
+        if (!dateString) return "";
+
+        let date = new Date(dateString);
+
+        let day = date.getDate().toString().padStart(2,'0');
+        let month = (date.getMonth()+1).toString().padStart(2,'0');
+        let year = date.getFullYear();
+
+        return `${day}-${month}-${year}`;
+    }
+
+    function loadStudents() {
+
+        fetch('/Admin/GetStudents')
+            .then(res => res.json())
+            .then(data => {
+
+                let tbody = document.getElementById("studentTableBody");
+                tbody.innerHTML = "";
+
+                data.forEach(student => {
+
+                    let row = `<tr>
+                        <td>${student.studentName}</td>
+                        <td>${student.rollNumber ?? ""}</td>
+                        <td>${student.registrationNumber}</td>
+                        <td>${student.class}</td>
+                        <td>${student.section}</td>
+                        <td>${student.session}</td>
+                        <td>${student.parentPhone}</td>
+                        <td>${formatDate(student.admissionDate)}</td>
+                        <td>${student.fatherName}</td>
+                        <td><span class="badge bg-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary action-btn">Edit</button>
+                            <button class="btn btn-sm btn-danger action-btn">Delete</button>
+                        </td>
+                    </tr>`;
+
+                    tbody.innerHTML += row;
+                });
+
+            });
+    }
 
 </script>
-<script>
 
-    async function loadStudents(){
-
-    try{
-
-    let response = await fetch('http://localhost:5239/api/AdmissionApi/GetStudents',{
-
-    method:'GET',
-    headers:{
-    'Accept':'application/json',
-    'Authorization':'Basic dW1lc2hAZ20uY29tOjEyMzQ='
-    }
-
-    });
-
-    if(!response.ok){
-
-    console.log("API Error",response.status);
-    return;
-
-    }
-
-    let result = await response.json();
-
-    let rows="";
-
-    result.data.forEach(function(s){
-
-    rows+=`<tr>
-
-    <td>${s.studentName ?? ""}</td>
-    <td>${s.rollNumber ?? ""}</td>
-    <td>${s.registrationNumber ?? ""}</td>
-    <td>${s.class ?? ""}</td>
-    <td>${s.section ?? ""}</td>
-    <td>${s.session ?? ""}</td>
-    <td>${s.parentPhone ?? ""}</td>
-    <td>${formatDate(s.admissionDate)}</td>
-    <td>Admin</td>
-
-    <td>
-    <span class="badge bg-success">Active</span>
-    </td>
-
-    <td>
-
-    <button class="btn btn-sm btn-info action-btn">
-    <i class="fa fa-eye"></i>
-    </button>
-
-    <button class="btn btn-sm btn-warning action-btn">
-    <i class="fa fa-edit"></i>
-    </button>
-
-    </td>
-
-    </tr>`;
-
-    });
-
-    document.getElementById("studentTableBody").innerHTML=rows;
-
-    }catch(err){
-
-    console.log("Error:",err);
-
-    }
-
-    }
-
-    function formatDate(date){
-
-    if(!date) return "";
-
-    let d=new Date(date);
-
-    return d.toLocaleDateString();
-
-    }
-
-    document.addEventListener("DOMContentLoaded",loadStudents);
-
-</script>

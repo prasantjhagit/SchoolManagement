@@ -31,4 +31,35 @@
         public string DocumentNumber { get; set; }
         public string FilePath { get; set; }
     }
+    public class StudentModel
+    {
+        public string RegistrationNumber { get; set; }
+
+        public string SchoolCode { get; set; }
+
+        public string Class { get; set; }
+
+        public string Section { get; set; }
+
+        public string Session { get; set; }
+
+        public string? RollNumber { get; set; }
+
+        public string StudentName { get; set; }
+
+        public DateTime? AdmissionDate { get; set; }
+
+        public string FatherName { get; set; }
+
+        public string MotherName { get; set; }
+
+        public string ParentPhone { get; set; }
+
+        public DateTime? DateOfBirth { get; set; }
+
+        public string Gender { get; set; }
+
+        public string Email { get; set; }
+
+    }
 }
