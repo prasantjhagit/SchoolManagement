@@ -1,0 +1,52 @@
+﻿CREATE TABLE Students (
+    StudentId INT IDENTITY(1,1) PRIMARY KEY,
+    RegistrationNumber NVARCHAR(20) NOT NULL UNIQUE,
+    SchoolCode NVARCHAR(10) NOT NULL,
+    Class NVARCHAR(5) NOT NULL,
+    Session NVARCHAR(4) NOT NULL,
+    RollNumber NVARCHAR(10),
+    StudentName NVARCHAR(100) NOT NULL,
+    AdmissionDate DATE NOT NULL,
+    Section NVARCHAR(5),
+    
+    FatherName NVARCHAR(100),
+    MotherName NVARCHAR(100),
+    ParentPhone NVARCHAR(15),
+    ParentsEmail NVARCHAR(100),
+
+    DateOfBirth DATE,
+    Gender NVARCHAR(10),
+    StudentEmail NVARCHAR(100),
+    
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    UpdatedAt DATETIME DEFAULT GETDATE()
+);
+
+----------------------------------------
+CREATE TABLE StudentAddresses (
+    AddressId INT IDENTITY(1,1) PRIMARY KEY,
+    StudentId INT NOT NULL,
+    Pincode NVARCHAR(10),
+    Town NVARCHAR(50),
+    City NVARCHAR(50),
+    State NVARCHAR(50),
+    FullAddress NVARCHAR(255),
+    
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    UpdatedAt DATETIME DEFAULT GETDATE(),
+
+    CONSTRAINT FK_StudentAddresses_Students FOREIGN KEY (StudentId)
+        REFERENCES Students(StudentId) ON DELETE CASCADE
+);
+----------------------------------------------
+CREATE TABLE StudentDocuments (
+    DocumentId INT IDENTITY(1,1) PRIMARY KEY,
+    StudentId INT NOT NULL,
+    DocumentType NVARCHAR(50),   
+    DocumentNumber NVARCHAR(50),
+    FilePath NVARCHAR(255),
+    UploadDate DATETIME DEFAULT GETDATE(),
+    
+    CONSTRAINT FK_StudentDocuments_Students FOREIGN KEY (StudentId)
+        REFERENCES Students(StudentId) ON DELETE CASCADE
+);

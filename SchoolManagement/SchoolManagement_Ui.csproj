@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\fonts\boxicons.eot" />
+    <None Include="wwwroot\fonts\boxicons.svg" />
+    <None Include="wwwroot\fonts\boxicons.ttf" />
+    <None Include="wwwroot\fonts\boxicons.woff" />
+    <None Include="wwwroot\fonts\boxicons.woff2" />
+    <None Include="wwwroot\java.js" />
+    <None Include="wwwroot\login2.css" />
+    <None Include="wwwroot\Logincss\animations.css" />
+    <None Include="wwwroot\Logincss\boxicons.css" />
+    <None Include="wwwroot\Logincss\boxicons.min.css" />
+    <None Include="wwwroot\Logincss\transformations.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Uploads\Photos\" />
+  </ItemGroup>
+
+</Project>

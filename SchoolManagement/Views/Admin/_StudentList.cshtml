@@ -1,0 +1,251 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="topbar">
+    <h4 class="mb-3">Student List</h4>
+    <style>
+
+        .student-table {
+            font-size: 13px;
+        }
+
+            .student-table th {
+                white-space: nowrap;
+            }
+
+        .filter-bar {
+            margin-bottom: 10px;
+        }
+
+            .filter-bar .form-control,
+            .filter-bar .form-select {
+                height: 34px;
+                font-size: 13px;
+            }
+
+        .action-btn {
+            padding: 3px 7px;
+        }
+
+    </style>
+    <div class="container-fluid">
+
+        <!-- FILTER BAR -->
+
+        <div class="row filter-bar g-2">
+
+            <div class="col-lg-3 col-md-6">
+                <input type="text" class="form-control"
+                       placeholder="Search Name / Roll / Reg / Phone">
+            </div>
+
+            <div class="col-lg-2 col-md-3">
+                <select id="classDropdown" class="form-select">
+                    <option value="">Class</option>
+                    <option value="1">Class 1</option>
+                    <option value="2">Class 2</option>
+                    <option value="3">Class 3</option>
+                    <option value="10">Class 10</option>
+                </select>
+            </div>
+
+            <div class="col-lg-2 col-md-3">
+                <select id="sectionDropdown" class="form-select">
+                    <option value="">Section</option>
+                </select>
+            </div>
+
+            <div class="col-lg-2 col-md-3">
+                <select class="form-select">
+                    <option value="">Session</option>
+                    <option>2026</option>
+                    <option>2025</option>
+                    <option>2024</option>
+                </select>
+            </div>
+        </div>
+
+
+        <!-- STUDENT GRID -->
+        <div class="table-responsive">
+
+            <table class="table table-hover table-bordered student-table mb-0">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Name</th>
+                        <th>Roll</th>
+                        <th>RegNo</th>
+                        <th>Class</th>
+                        <th>Section</th>
+                        <th>Session</th>
+                        <th>Phone</th>
+                        <th>Admission</th>
+                        <th>Admitted By</th>
+                        <th>Status</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="studentTableBody"></tbody>
+
+            </table>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+
+                <div style="font-size:13px;">
+                    Showing 1 to 10 of 120 entries
+                </div>
+
+                <nav>
+                    <ul class="pagination pagination-sm mb-0">
+
+                        <li class="page-item disabled">
+                            <a class="page-link">Previous</a>
+                        </li>
+
+                        <li class="page-item active">
+                            <a class="page-link">1</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link">2</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link">3</a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link">Next</a>
+                        </li>
+
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    const sections = {
+
+    "1":["A","B"],
+    "2":["A","B","C"],
+    "3":["A","B"],
+    "10":["A","B","C","D"]
+
+    };
+
+    document.getElementById("classDropdown").addEventListener("change",function(){
+
+    let classId=this.value;
+    let section=document.getElementById("sectionDropdown");
+
+    section.innerHTML="<option value=''>Section</option>";
+
+    if(sections[classId]){
+
+    sections[classId].forEach(function(sec){
+
+    let option=document.createElement("option");
+    option.value=sec;
+    option.text=sec;
+
+    section.appendChild(option);
+
+    });
+
+    }
+
+    });
+
+</script>
+<script>
+
+    async function loadStudents(){
+
+    try{
+
+    let response = await fetch('http://localhost:5239/api/AdmissionApi/GetStudents',{
+
+    method:'GET',
+    headers:{
+    'Accept':'application/json',
+    'Authorization':'Basic dW1lc2hAZ20uY29tOjEyMzQ='
+    }
+
+    });
+
+    if(!response.ok){
+
+    console.log("API Error",response.status);
+    return;
+
+    }
+
+    let result = await response.json();
+
+    let rows="";
+
+    result.data.forEach(function(s){
+
+    rows+=`<tr>
+
+    <td>${s.studentName ?? ""}</td>
+    <td>${s.rollNumber ?? ""}</td>
+    <td>${s.registrationNumber ?? ""}</td>
+    <td>${s.class ?? ""}</td>
+    <td>${s.section ?? ""}</td>
+    <td>${s.session ?? ""}</td>
+    <td>${s.parentPhone ?? ""}</td>
+    <td>${formatDate(s.admissionDate)}</td>
+    <td>Admin</td>
+
+    <td>
+    <span class="badge bg-success">Active</span>
+    </td>
+
+    <td>
+
+    <button class="btn btn-sm btn-info action-btn">
+    <i class="fa fa-eye"></i>
+    </button>
+
+    <button class="btn btn-sm btn-warning action-btn">
+    <i class="fa fa-edit"></i>
+    </button>
+
+    </td>
+
+    </tr>`;
+
+    });
+
+    document.getElementById("studentTableBody").innerHTML=rows;
+
+    }catch(err){
+
+    console.log("Error:",err);
+
+    }
+
+    }
+
+    function formatDate(date){
+
+    if(!date) return "";
+
+    let d=new Date(date);
+
+    return d.toLocaleDateString();
+
+    }
+
+    document.addEventListener("DOMContentLoaded",loadStudents);
+
+</script>

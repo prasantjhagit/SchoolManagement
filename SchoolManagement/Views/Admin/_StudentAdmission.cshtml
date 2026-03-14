@@ -1,0 +1,385 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "New Student Admission";
+}
+
+<style>
+    .admission-card {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        background: #ffffff;
+        border-radius: 15px;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #4a4a4a;
+        margin-bottom: 20px;
+        border-left: 4px solid #28a745;
+        padding-left: 10px;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 10px;
+        transition: all 0.3s;
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 8px rgba(40, 167, 69, 0.2);
+        }
+
+    .btn-custom {
+        border-radius: 10px;
+        padding: 8px 25px;
+        font-weight: 500;
+    }
+
+    .btn-success:hover {
+        background: #218838;
+    }
+
+    .btn-secondary:hover {
+        background: #6c757d;
+    }
+
+    textarea.form-control {
+        resize: none;
+    }
+
+    /* validation */
+
+    .validation-error {
+        color: #dc3545;
+        font-size: 13px;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .input-error {
+        border-color: #dc3545 !important;
+    }
+</style>
+
+<h4 class="mb-4 text-success">New Student Admission</h4>
+
+<div class="admission-card">
+
+    <form id="admissionForm" enctype="multipart/form-data">
+
+        <div class="section-title">Student Information</div>
+
+        <div class="row g-3 mb-4">
+
+            <div class="col-md-3">
+                <input type="text" id="schoolCode" name="SchoolCode" class="form-control" placeholder="School Code (ABC)" />
+                <label class="validation-error" id="schoolCodeError"></label>
+            </div>
+
+            <div class="col-md-3">
+                <select id="classSelect" name="Class" class="form-select">
+                    <option value="">Select Class</option>
+                    <option value="01">1</option>
+                    <option value="02">2</option>
+                    <option value="03">3</option>
+                    <option value="04">4</option>
+                    <option value="05">5</option>
+                    <option value="06">6</option>
+                    <option value="07">7</option>
+                    <option value="08">8</option>
+                    <option value="09">9</option>
+                    <option value="10">10</option>
+                </select>
+                <label class="validation-error" id="classSelectError"></label>
+            </div>
+
+            <div class="col-md-3">
+                <select id="sessionSelect" name="Session" class="form-select">
+                    <option value="">Select Session</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                </select>
+                <label class="validation-error" id="sessionSelectError"></label>
+            </div>
+
+            <div class="col-md-3">
+                <input type="text" id="registrationNumber" name="RegistrationNumber" class="form-control" placeholder="Registration Number" />
+            </div>
+
+            <div class="col-md-4 mt-3">
+                <input type="text" id="StudentName" name="StudentName" class="form-control" placeholder="Student Name" />
+                <label class="validation-error" id="StudentNameError"></label>
+            </div>
+
+            <div class="col-md-4 mt-3">
+                <input type="date" name="AdmissionDate" class="form-control" />
+            </div>
+
+            <div class="col-md-4 mt-3">
+                <input type="text" name="RollNumber" class="form-control" placeholder="Roll Number" />
+            </div>
+
+            <div class="col-md-3 mt-3">
+                <select name="Section" class="form-select">
+                    <option>Select Section</option>
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="section-title">Parents Information</div>
+
+        <div class="row g-3 mb-4">
+
+            <div class="col-md-4">
+                <input type="text" name="FatherName" class="form-control" placeholder="Father Name" />
+            </div>
+
+            <div class="col-md-4">
+                <input type="text" name="MotherName" class="form-control" placeholder="Mother Name" />
+            </div>
+
+            <div class="col-md-4">
+                <input type="text" name="ParentPhone" class="form-control" placeholder="Parent Phone" />
+            </div>
+
+        </div>
+
+        <div class="section-title">Student Details</div>
+
+        <div class="row g-3 mb-4">
+
+            <div class="col-md-3">
+                <input type="date" name="DateOfBirth" class="form-control" />
+            </div>
+
+            <div class="col-md-3">
+                <select name="Gender" class="form-select">
+                    <option>Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <input type="email" name="Email" class="form-control" placeholder="Email" />
+            </div>
+
+            <div class="col-md-3">
+                <input type="file" name="studentPhoto" class="form-control" />
+            </div>
+
+        </div>
+
+        <div class="section-title">Address</div>
+
+        <div class="row g-3 mb-3">
+
+            <div class="col-md-3">
+                <input type="text" id="pincode" name="Pincode" class="form-control" placeholder="Enter PIN Code" />
+            </div>
+
+            <div class="col-md-3">
+                <input type="text" id="town" name="Town" class="form-control" placeholder="Town / Area" />
+            </div>
+
+            <div class="col-md-3">
+                <input type="text" id="city" name="City" class="form-control" placeholder="City" />
+            </div>
+
+            <div class="col-md-3">
+                <input type="text" id="state" name="State" class="form-control" placeholder="State" />
+            </div>
+
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-12">
+<textarea id="address" name="FullAddress" class="form-control" rows="2" placeholder="Address"></textarea>
+            </div>
+        </div>
+
+        <div class="section-title">Address Proof Upload</div>
+
+        <div class="row g-3 mb-4">
+
+            <div class="col-md-4">
+                <select name="Documents[0].DocumentType" class="form-select">
+                    <option>Select Address Proof Type</option>
+                    <option>Aadhar Card</option>
+                    <option>Passport</option>
+                    <option>Electricity Bill</option>
+                    <option>Ration Card</option>
+                    <option>Driving License</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <input type="file" name="documentFiles" class="form-control" />
+            </div>
+
+            <div class="col-md-4">
+                <input type="text" name="Documents[0].DocumentNumber" class="form-control" placeholder="Document Number" />
+            </div>
+
+        </div>
+
+        <hr>
+
+        <div class="text-end">
+            <button type="submit" id="saveBtn" class="btn btn-success btn-custom">
+                <i class="fa fa-save"></i> Save
+            </button>
+
+            <button type="reset" class="btn btn-secondary btn-custom">
+                Reset
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+<br>
+
+<div id="studentListContainer"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+
+    toastr.options = {
+    positionClass: "toast-top-right",
+    closeButton: true,
+    progressBar: true,
+    timeOut: "3000"
+    };
+
+    function clearErrors(){
+
+    document.querySelectorAll(".validation-error")
+    .forEach(x=>x.innerText="");
+
+    document.querySelectorAll(".form-control,.form-select")
+    .forEach(x=>x.classList.remove("input-error"));
+
+    }
+
+    function validateForm(){
+
+    let valid=true;
+
+    clearErrors();
+
+    let schoolCode=document.getElementById("schoolCode").value.trim();
+    let studentName=document.getElementById("StudentName").value.trim();
+    let classSelect=document.getElementById("classSelect").value;
+    let sessionSelect=document.getElementById("sessionSelect").value;
+
+    if(schoolCode===""){
+    document.getElementById("schoolCodeError").innerText="School Code required";
+    document.getElementById("schoolCode").classList.add("input-error");
+    valid=false;
+    }
+
+    if(classSelect===""){
+    document.getElementById("classSelectError").innerText="Class required";
+    document.getElementById("classSelect").classList.add("input-error");
+    valid=false;
+    }
+
+    if(sessionSelect===""){
+    document.getElementById("sessionSelectError").innerText="Session required";
+    document.getElementById("sessionSelect").classList.add("input-error");
+    valid=false;
+    }
+
+    if(studentName===""){
+    document.getElementById("StudentNameError").innerText="Student Name required";
+    document.getElementById("StudentName").classList.add("input-error");
+    valid=false;
+    }
+
+    return valid;
+
+    }
+
+    /* remove error while typing */
+
+    document.querySelectorAll("input").forEach(input=>{
+    input.addEventListener("input",function(){
+
+    const err=document.getElementById(this.id+"Error");
+    if(err){ err.innerText=""; }
+
+    this.classList.remove("input-error");
+
+    });
+    });
+
+    document.querySelectorAll("select").forEach(select=>{
+    select.addEventListener("change",function(){
+
+    const err=document.getElementById(this.id+"Error");
+    if(err){ err.innerText=""; }
+
+    this.classList.remove("input-error");
+
+    });
+    });
+
+    document.getElementById("admissionForm").addEventListener("submit", async function (e) {
+
+    e.preventDefault();
+
+    if(!validateForm()){
+    return;
+    }
+
+    const form=this;
+    const formData=new FormData(form);
+    const saveBtn=document.getElementById("saveBtn");
+
+    saveBtn.disabled=true;
+    saveBtn.innerHTML='<i class="fa fa-spinner fa-spin"></i> Saving...';
+
+    try{
+
+    const response=await fetch('/Admin/SaveAdmission',{
+    method:'POST',
+    body:formData
+    });
+
+    const result=await response.json();
+
+    if(result.success){
+
+    toastr.success("Student Admission Saved Successfully");
+    form.reset();
+
+    }else{
+
+    toastr.error(result.message);
+
+    }
+
+    }catch{
+
+    toastr.error("Server Error");
+
+    }
+
+    saveBtn.disabled=false;
+    saveBtn.innerHTML='<i class="fa fa-save"></i> Save';
+
+    });
+
+</script>

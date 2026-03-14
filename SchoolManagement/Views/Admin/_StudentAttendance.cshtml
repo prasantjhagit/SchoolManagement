@@ -1,0 +1,89 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Student Attendance";
+}
+
+<h2 class="mb-4">Student Attendance</h2>
+
+<!-- Attendance Filter -->
+<div class="row mb-3">
+    <div class="col-md-3">
+        <select class="form-control" id="classFilter">
+            <option value="">Select Class</option>
+            @foreach (var c in @ViewBag.Classes)
+            {
+                <option value="@c.Id">@c.Name</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <input type="date" class="form-control" id="attendanceDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-primary" id="filterBtn">Filter</button>
+    </div>
+</div>
+
+<!-- Attendance Grid -->
+<table class="table table-bordered table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>Reg. No</th>
+            <th>Student Name</th>
+            <th>Class</th>
+            <th>Attendance Status</th>
+        </tr>
+    </thead>
+    <tbody id="attendanceTable">
+        @* Rows will be dynamically loaded *@
+    </tbody>
+</table>
+
+<button class="btn btn-success mt-3" id="saveAttendance">Save Attendance</button>
+
+<script>
+    $(document).ready(function () {
+        // Load attendance when filter is clicked
+        $('#filterBtn').click(function () {
+            var classId = $('#classFilter').val();
+            var date = $('#attendanceDate').val();
+            $.get('/Attendance/GetStudents', { classId: classId, date: date }, function (data) {
+                var html = '';
+                data.forEach(function (s) {
+                    html += `<tr>
+                        <td>${s.RegistrationNumber}</td>
+                        <td>${s.Name}</td>
+                        <td>${s.ClassName}</td>
+                        <td>
+                            <select class="form-control attendanceStatus" data-studentid="${s.Id}">
+                                <option value="Present" ${s.Status === "Present" ? "selected" : ""}>Present</option>
+                                <option value="Absent" ${s.Status === "Absent" ? "selected" : ""}>Absent</option>
+                            </select>
+                        </td>
+                    </tr>`;
+                });
+                $('#attendanceTable').html(html);
+            });
+        });
+
+        // Save Attendance
+        $('#saveAttendance').click(function () {
+            var attendanceData = [];
+            $('.attendanceStatus').each(function () {
+                attendanceData.push({
+                    StudentId: $(this).data('studentid'),
+                    Status: $(this).val(),
+                    Date: $('#attendanceDate').val()
+                });
+            });
+
+            $.ajax({
+                type: 'POST',
+                url: '/Attendance/SaveAttendance',
+                contentType: 'application/json',
+                data: JSON.stringify(attendanceData),
+                success: function () { alert('Attendance saved successfully!'); }
+            });
+        });
+    });
+</script>
