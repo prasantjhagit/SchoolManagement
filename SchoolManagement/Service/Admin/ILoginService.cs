@@ -1,7 +1,10 @@
-﻿namespace SchoolManagement_Ui.Service.Admin
+﻿using SchoolManagement_Ui.DTO;
+using SchoolManagement_Ui.Models.Login;
+
+namespace SchoolManagement_Ui.Service.Admin
 {
     public interface ILoginService
     {
-        public string Login(string username, string password);    
+        Task<LoginResponse> LoginAsync(LoginModel model);
     }
 }

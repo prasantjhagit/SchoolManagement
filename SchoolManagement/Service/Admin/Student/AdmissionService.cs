@@ -97,4 +97,22 @@ public class AdmissionService : IAdmissionService
 
         return result?.Data ?? new List<StudentModel>();
     }
+
+    public async Task<List<TodayStudentStatusDto>> GetTodayStudentStatus()
+    {
+        var response = await _httpClient.GetAsync("api/AdmissionApi/GetTodayStudentStatus");
+
+        response.EnsureSuccessStatusCode();
+
+        var json = await response.Content.ReadAsStringAsync();
+
+        var result = JsonSerializer.Deserialize<ApiResponse<List<TodayStudentStatusDto>>>(
+            json,
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+        return result?.Data ?? new List<TodayStudentStatusDto>();
+    }
 }

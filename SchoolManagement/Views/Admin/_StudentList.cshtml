@@ -4,7 +4,6 @@
 <div class="topbar">
     <h4 class="mb-3">Student List</h4>
     <style>
-
         .student-table {
             font-size: 13px;
         }
@@ -26,55 +25,57 @@
         .action-btn {
             padding: 3px 7px;
         }
-
     </style>
+
     <div class="container-fluid">
-
         <!-- FILTER BAR -->
-
         <div class="row filter-bar g-2">
-
             <div class="col-lg-3 col-md-6">
-                <input type="text" class="form-control"
-                       placeholder="Search Name / Roll / Reg / Phone">
+                <input id="searchInput" type="text" class="form-control" placeholder="Search Name / Roll / Reg / Phone">
             </div>
 
             <div class="col-lg-2 col-md-3">
                 <select id="classDropdown" class="form-select">
                     <option value="">Class</option>
-                    <option value="1">Class 1</option>
-                    <option value="2">Class 2</option>
-                    <option value="3">Class 3</option>
-                    <option value="10">Class 10</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
                 </select>
             </div>
 
             <div class="col-lg-2 col-md-3">
                 <select id="sectionDropdown" class="form-select">
                     <option value="">Section</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
                 </select>
             </div>
 
             <div class="col-lg-2 col-md-3">
-                <select class="form-select">
+                <select id="sessionDropdown" class="form-select">
                     <option value="">Session</option>
-                    <option>2026</option>
-                    <option>2025</option>
-                    <option>2024</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
                 </select>
+            </div>
+            <div class="col-lg-2 col-md-3">
+                <button id="exportExcelBtn" class="btn btn-success btn-sm mt-1">Export</button>
             </div>
         </div>
 
-
         <!-- STUDENT GRID -->
         <div class="table-responsive">
-
             <table class="table table-hover table-bordered student-table mb-0">
-
                 <thead class="table-light">
-
                     <tr>
-
                         <th>Name</th>
                         <th>Roll</th>
                         <th>RegNo</th>
@@ -86,118 +87,222 @@
                         <th>Admitted By</th>
                         <th>Status</th>
                         <th>Action</th>
-
                     </tr>
-
                 </thead>
-
                 <tbody id="studentTableBody"></tbody>
-
             </table>
+
             <div class="d-flex justify-content-between align-items-center mt-2">
-
-                <div style="font-size:13px;">
-                    Showing 1 to 10 of 120 entries
-                </div>
-
+                <div id="paginationInfo" style="font-size:13px;">Showing 0 to 0 of 0 entries</div>
                 <nav>
-                    <ul class="pagination pagination-sm mb-0">
-
-                        <li class="page-item disabled">
-                            <a class="page-link">Previous</a>
-                        </li>
-
-                        <li class="page-item active">
-                            <a class="page-link">1</a>
-                        </li>
-
-                        <li class="page-item">
-                            <a class="page-link">2</a>
-                        </li>
-
-                        <li class="page-item">
-                            <a class="page-link">3</a>
-                        </li>
-
-                        <li class="page-item">
-                            <a class="page-link">Next</a>
-                        </li>
-
-                    </ul>
+                    <ul id="paginationContainer" class="pagination pagination-sm mb-0"></ul>
                 </nav>
-
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    let allStudents = [];
+    let currentPage = 1;
+    const pageSize = 10;
 
-       function formatDate(dateString) {
-
-        if (!dateString) return "";
-
-        let date = new Date(dateString);
-
-        let day = date.getDate().toString().padStart(2, '0');
-        let month = (date.getMonth() + 1).toString().padStart(2, '0');
-        let year = date.getFullYear();
-
-        return `${day}-${month}-${year}`;
+    function formatDate(dateString){
+        if(!dateString) return "";
+        let parts = dateString.split("T")[0].split("-");
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
     }
 
-          
+    function renderTable(data){
+        let tbody = document.getElementById("studentTableBody");
+        tbody.innerHTML = "";
 
-    document.addEventListener("DOMContentLoaded", function () {
-        loadStudents();
-    });
+        if(!data || data.length === 0){
+            tbody.innerHTML = `<tr><td colspan="11" class="text-center">No records found</td></tr>`;
+            return;
+        }
 
-    function formatDate(dateString) {
-
-        if (!dateString) return "";
-
-        let date = new Date(dateString);
-
-        let day = date.getDate().toString().padStart(2,'0');
-        let month = (date.getMonth()+1).toString().padStart(2,'0');
-        let year = date.getFullYear();
-
-        return `${day}-${month}-${year}`;
+        data.forEach(student => {
+            let row = `<tr>
+                <td>${student.studentName ?? ""}</td>
+                <td>${student.rollNumber ?? ""}</td>
+                <td>${student.registrationNumber ?? ""}</td>
+                <td>${student.class ?? ""}</td>
+                <td>${student.section ?? ""}</td>
+                <td>${student.session ?? ""}</td>
+                <td>${student.parentPhone ?? ""}</td>
+                <td>${formatDate(student.admissionDate)}</td>
+                <td>${student.fatherName ?? ""}</td>
+                <td><span class="badge bg-success">Active</span></td>
+                <td>
+                    <button class="btn btn-sm action-btn"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm action-btn"><i class="fa fa-trash" style="color:red" aria-hidden="true"></i></button>
+                </td>
+            </tr>`;
+            tbody.innerHTML += row;
+        });
     }
 
-    function loadStudents() {
+    function updatePagination(){
+        const paginationContainer = document.getElementById("paginationContainer");
+        const paginationInfo = document.getElementById("paginationInfo");
 
-        fetch('/Admin/GetStudents')
+        paginationContainer.innerHTML = "";
+
+        const totalRecords = allStudents.length;
+        const totalPages = Math.ceil(totalRecords / pageSize);
+
+        if(totalRecords === 0){
+            paginationInfo.innerText = "Showing 0 to 0 of 0 entries";
+            return;
+        }
+
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = Math.min(startIndex + pageSize, totalRecords);
+
+        paginationInfo.innerText = `Showing ${startIndex + 1} to ${endIndex} of ${totalRecords} entries`;
+
+        // Previous button
+        paginationContainer.innerHTML += `
+            <li class="page-item ${currentPage === 1 ? "disabled" : ""}">
+                <a class="page-link" href="javascript:void(0)" onclick="changePage(${currentPage - 1})">Previous</a>
+            </li>
+        `;
+
+        // Page numbers
+        for(let i = 1; i <= totalPages; i++){
+            paginationContainer.innerHTML += `
+                <li class="page-item ${currentPage === i ? "active" : ""}">
+                    <a class="page-link" href="javascript:void(0)" onclick="changePage(${i})">${i}</a>
+                </li>
+            `;
+        }
+
+        // Next button
+        paginationContainer.innerHTML += `
+            <li class="page-item ${currentPage === totalPages ? "disabled" : ""}">
+                <a class="page-link" href="javascript:void(0)" onclick="changePage(${currentPage + 1})">Next</a>
+            </li>
+        `;
+    }
+
+    function bindPagedData(){
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const pagedData = allStudents.slice(startIndex, endIndex);
+
+        renderTable(pagedData);
+        updatePagination();
+    }
+
+    function changePage(page){
+        const totalPages = Math.ceil(allStudents.length / pageSize);
+
+        if(page < 1 || page > totalPages){
+            return;
+        }
+
+        currentPage = page;
+        bindPagedData();
+    }
+
+    function loadStudents(search = "", classFilter = "", sectionFilter = "", sessionFilter = ""){
+        const url = `/Admin/FilterStudentList?search=${encodeURIComponent(search)}&classFilter=${encodeURIComponent(classFilter)}&sectionFilter=${encodeURIComponent(sectionFilter)}&sessionFilter=${encodeURIComponent(sessionFilter)}`;
+
+        fetch(url)
             .then(res => res.json())
             .then(data => {
-
-                let tbody = document.getElementById("studentTableBody");
-                tbody.innerHTML = "";
-
-                data.forEach(student => {
-
-                    let row = `<tr>
-                        <td>${student.studentName}</td>
-                        <td>${student.rollNumber ?? ""}</td>
-                        <td>${student.registrationNumber}</td>
-                        <td>${student.class}</td>
-                        <td>${student.section}</td>
-                        <td>${student.session}</td>
-                        <td>${student.parentPhone}</td>
-                        <td>${formatDate(student.admissionDate)}</td>
-                        <td>${student.fatherName}</td>
-                        <td><span class="badge bg-success">Active</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-primary action-btn">Edit</button>
-                            <button class="btn btn-sm btn-danger action-btn">Delete</button>
-                        </td>
-                    </tr>`;
-
-                    tbody.innerHTML += row;
-                });
-
-            });
+                allStudents = data || [];
+                currentPage = 1;
+                bindPagedData();
+            })
+            .catch(err => console.error("Error loading students:", err));
     }
 
+    document.addEventListener("DOMContentLoaded", function(){
+        const searchInput = document.getElementById("searchInput");
+        const classDropdown = document.getElementById("classDropdown");
+        const sectionDropdown = document.getElementById("sectionDropdown");
+        const sessionDropdown = document.getElementById("sessionDropdown");
+        const exportBtn = document.getElementById("exportExcelBtn");
+
+        function getFilters() {
+            return {
+                search: searchInput.value,
+                classFilter: classDropdown.value,
+                sectionFilter: sectionDropdown.value,
+                sessionFilter: sessionDropdown ? sessionDropdown.value : ""
+            };
+        }
+
+        // export button event
+        if(exportBtn){
+            exportBtn.addEventListener("click", function(){
+                exportTableToExcel("Students.csv");
+            });
+        }
+
+        // initial load
+        loadStudents();
+
+        // Search input
+        searchInput.addEventListener("keyup", function(){
+            const filters = getFilters();
+            loadStudents(filters.search, filters.classFilter, filters.sectionFilter, filters.sessionFilter);
+        });
+
+        // Class dropdown
+        classDropdown.addEventListener("change", function(){
+            const filters = getFilters();
+            loadStudents(filters.search, filters.classFilter, filters.sectionFilter, filters.sessionFilter);
+        });
+
+        // Section dropdown
+        sectionDropdown.addEventListener("change", function(){
+            const filters = getFilters();
+            loadStudents(filters.search, filters.classFilter, filters.sectionFilter, filters.sessionFilter);
+        });
+
+        // Session dropdown
+        if(sessionDropdown){
+            sessionDropdown.addEventListener("change", function(){
+                const filters = getFilters();
+                loadStudents(filters.search, filters.classFilter, filters.sectionFilter, filters.sessionFilter);
+            });
+        }
+    });
 </script>
 
+<script>
+    function exportTableToExcel(filename = "Students.csv") {
+        const table = document.querySelector(".student-table");
+        let csv = [];
+
+        const rows = table.querySelectorAll("tr");
+
+        rows.forEach((row) => {
+            let rowData = [];
+            const cells = row.querySelectorAll("th, td");
+
+            cells.forEach((cell, index) => {
+                // Skip Status (index 9) and Action (index 10)
+                if (index === 9 || index === 10) return;
+
+                let text = cell.innerText.trim().replace(/,/g, " ");
+                rowData.push(`"${text}"`);
+            });
+
+            csv.push(rowData.join(","));
+        });
+
+        const csvString = csv.join("\n");
+        const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>

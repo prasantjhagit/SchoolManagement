@@ -27,6 +27,11 @@ namespace SchoolManagement_Api.Service.Admin
             return await _repo.GetStudents();
         }
 
+        public async Task<List<TodayStudentStatusDto>> GetTodayStudentStatus()
+        {
+            return await _repo.GetTodayStudentStatus();
+        }
+
         public Task UpdatePhotoPathAsync(int studentId, string photoPath)
         {
             throw new NotImplementedException();

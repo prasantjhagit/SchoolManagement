@@ -1,22 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SchoolManagement_Api.DTO;
 using SchoolManagement_Api.Service.Admin;
 
 namespace SchoolManagement_Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("apilogin/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
     {
         private readonly ILoginService _loginService;
+
         public LoginController(ILoginService loginService)
         {
             _loginService = loginService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO model)
         {
-            var result = await _loginService.LoginAsync(email, password);
+            var result = await _loginService.LoginAsync(model);
+
+            if (result == null)
+            {
+                return Unauthorized("Invalid Email or Password");
+            }
 
             return Ok(result);
         }

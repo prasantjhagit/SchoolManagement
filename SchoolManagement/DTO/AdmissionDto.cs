@@ -72,4 +72,21 @@
         public T Data { get; set; }
     }
 
+    public class TodayStudentStatusDto
+    {
+        public int StudentId { get; set; }
+
+        public string StudentName { get; set; }
+
+        public string RollNumber { get; set; }
+
+        public int PresentCount { get; set; }
+
+        public int AbsentCount { get; set; }
+
+        public int LateCount { get; set; }
+
+        public string TodayStatus { get; set; }
+    }
+
 }

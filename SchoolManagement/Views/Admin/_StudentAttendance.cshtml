@@ -1,89 +1,313 @@
-﻿@{
+﻿@using SchoolManagement_Ui.DTO
+@model List<TodayStudentStatusDto>
+
+@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    ViewData["Title"] = "Student Attendance";
+    ViewData["Title"] = "Student Attendance Dashboard";
 }
 
-<h2 class="mb-4">Student Attendance</h2>
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- Attendance Filter -->
-<div class="row mb-3">
-    <div class="col-md-3">
-        <select class="form-control" id="classFilter">
-            <option value="">Select Class</option>
-            @foreach (var c in @ViewBag.Classes)
-            {
-                <option value="@c.Id">@c.Name</option>
-            }
-        </select>
+<style>
+
+    .dashboard-card {
+        background: white;
+        border-radius: 14px;
+        padding: 25px;
+        box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+    }
+
+    /* SUMMARY CARDS */
+
+    .summary-card {
+        border-radius: 12px;
+        padding: 20px;
+        color: white;
+        cursor: pointer;
+        transition: .3s;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .total {
+        background: linear-gradient(45deg,#36d1dc,#5b86e5);
+    }
+
+    .present {
+        background: linear-gradient(45deg,#00b09b,#96c93d);
+    }
+
+    .absent {
+        background: linear-gradient(45deg,#ff416c,#ff4b2b);
+    }
+
+    .late {
+        background: linear-gradient(45deg,#f7971e,#ffd200);
+    }
+
+    .summary-card h3 {
+        font-weight: 700;
+        margin-top: 5px;
+    }
+
+    /* FILTER */
+
+    .filter-box {
+        background: #f8f9fc;
+        padding: 18px;
+        border-radius: 10px;
+        margin-top: 25px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+
+        .filter-box label {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .filter-box .form-control {
+            height: 40px;
+            border-radius: 8px;
+        }
+
+    /* TABLE */
+
+    .table-card {
+        margin-top: 25px;
+    }
+
+    .table thead {
+        background: #f1f3f8;
+    }
+
+    .table tbody tr:hover {
+        background: #f8f9ff;
+    }
+
+    .student-img {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        margin-right: 8px;
+        border: 2px solid #eee;
+    }
+
+    /* BADGES */
+
+    .badge-present {
+        background: #e8fff3;
+        color: #00a65a;
+        padding: 6px 12px;
+        border-radius: 20px;
+    }
+
+    .badge-absent {
+        background: #ffeaea;
+        color: #e74c3c;
+        padding: 6px 12px;
+        border-radius: 20px;
+    }
+
+    .badge-late {
+        background: #fff3cd;
+        color: #856404;
+        padding: 6px 12px;
+        border-radius: 20px;
+    }
+
+    /* PAGINATION */
+
+    .pagination .page-link {
+        border-radius: 8px;
+        margin: 0 3px;
+    }
+
+</style>
+
+<div class="container-fluid">
+
+    <div class="dashboard-card">
+
+        <h4 class="mb-4">Student Attendance Dashboard</h4>
+
+        <!-- SUMMARY CARDS -->
+
+        <div class="row g-3">
+
+            <div class="col-md-3">
+                <div class="summary-card total">
+                    <div>
+                        <small>Total Students</small>
+                        <h3>@Model.Count()</h3>
+                    </div>
+                    <i class="fa fa-users fa-2x"></i>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="summary-card present">
+                    <div>
+                        <small>Present Today</small>
+                        <h3>@Model.Count(x => x.TodayStatus == "Present")</h3>
+                    </div>
+                    <i class="fa fa-check-circle fa-2x"></i>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="summary-card absent">
+                    <div>
+                        <small>Absent Today</small>
+                        <h3>@Model.Count(x => x.TodayStatus == "Absent")</h3>
+                    </div>
+                    <i class="fa fa-times-circle fa-2x"></i>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="summary-card late">
+                    <div>
+                        <small>Late Today</small>
+                        <h3>@Model.Count(x => x.TodayStatus == "Late")</h3>
+                    </div>
+                    <i class="fa fa-clock fa-2x"></i>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FILTER -->
+
+        <div class="filter-box">
+
+            <div class="row g-3">
+
+                <div class="col-md-3">
+                    <label>Search</label>
+                    <input type="text" class="form-control" placeholder="Search Name / Roll">
+                </div>
+
+                <div class="col-md-2">
+                    <label>Class</label>
+                    <select class="form-control">
+                        <option>All</option>
+                        <option>Class 1</option>
+                        <option>Class 2</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label>Section</label>
+                    <select class="form-control">
+                        <option>All</option>
+                        <option>A</option>
+                        <option>B</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label>Date</label>
+                    <input type="date" class="form-control">
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-success w-100">
+                        <i class="fa fa-file-excel"></i> Export
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+
+        <div class="table-card">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Roll</th>
+                            <th>Student</th>
+                            <th>Present (Month)</th>
+                            <th>Absent (Month)</th>
+                            <th>Late (Month)</th>
+                            <th>Status Today</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var student in Model)
+                        {
+
+                            <tr>
+
+                                <td>@student.RollNumber</td>
+
+                                <td>
+                                    <img src="https://i.pravatar.cc/40" class="student-img">
+                                    @student.StudentName
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-success">
+                                        @student.PresentCount
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-danger">
+                                        @student.AbsentCount
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="badge bg-warning">
+                                        @student.LateCount
+                                    </span>
+                                </td>
+
+                                <td>
+
+                                    @if (student.TodayStatus == "Present")
+                                    {
+                                        <span class="badge-present">Present</span>
+                                    }
+                                    else if (student.TodayStatus == "Absent")
+                                    {
+
+                                        <span class="badge-absent">Absent</span>
+                                    }
+                                    else if (student.TodayStatus == "Late")
+                                    {
+
+                                        <span class="badge-late">Late</span>
+                                    }
+
+                                </td>
+
+                            </tr>
+
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
     </div>
-    <div class="col-md-3">
-        <input type="date" class="form-control" id="attendanceDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
-    </div>
-    <div class="col-md-3">
-        <button class="btn btn-primary" id="filterBtn">Filter</button>
-    </div>
+
 </div>
-
-<!-- Attendance Grid -->
-<table class="table table-bordered table-hover">
-    <thead class="thead-dark">
-        <tr>
-            <th>Reg. No</th>
-            <th>Student Name</th>
-            <th>Class</th>
-            <th>Attendance Status</th>
-        </tr>
-    </thead>
-    <tbody id="attendanceTable">
-        @* Rows will be dynamically loaded *@
-    </tbody>
-</table>
-
-<button class="btn btn-success mt-3" id="saveAttendance">Save Attendance</button>
-
-<script>
-    $(document).ready(function () {
-        // Load attendance when filter is clicked
-        $('#filterBtn').click(function () {
-            var classId = $('#classFilter').val();
-            var date = $('#attendanceDate').val();
-            $.get('/Attendance/GetStudents', { classId: classId, date: date }, function (data) {
-                var html = '';
-                data.forEach(function (s) {
-                    html += `<tr>
-                        <td>${s.RegistrationNumber}</td>
-                        <td>${s.Name}</td>
-                        <td>${s.ClassName}</td>
-                        <td>
-                            <select class="form-control attendanceStatus" data-studentid="${s.Id}">
-                                <option value="Present" ${s.Status === "Present" ? "selected" : ""}>Present</option>
-                                <option value="Absent" ${s.Status === "Absent" ? "selected" : ""}>Absent</option>
-                            </select>
-                        </td>
-                    </tr>`;
-                });
-                $('#attendanceTable').html(html);
-            });
-        });
-
-        // Save Attendance
-        $('#saveAttendance').click(function () {
-            var attendanceData = [];
-            $('.attendanceStatus').each(function () {
-                attendanceData.push({
-                    StudentId: $(this).data('studentid'),
-                    Status: $(this).val(),
-                    Date: $('#attendanceDate').val()
-                });
-            });
-
-            $.ajax({
-                type: 'POST',
-                url: '/Attendance/SaveAttendance',
-                contentType: 'application/json',
-                data: JSON.stringify(attendanceData),
-                success: function () { alert('Attendance saved successfully!'); }
-            });
-        });
-    });
-</script>

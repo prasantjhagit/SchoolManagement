@@ -89,6 +89,8 @@ namespace SchoolManagement_Api.DTO
 
         public StudentAddress Address { get; set; }
         public ICollection<StudentDocument> Documents { get; set; }
+        public ICollection<StudentAttendance> StudentAttendances { get; set; }
+
     }
 
     public class StudentAddress
@@ -172,5 +174,42 @@ namespace SchoolManagement_Api.DTO
         public string Email { get; set; }
 
     }
+
+    public class TodayStudentStatusDto
+    {
+        public int StudentId { get; set; }
+
+        public string StudentName { get; set; }
+
+        public string RollNumber { get; set; }
+
+        public int PresentCount { get; set; }
+
+        public int AbsentCount { get; set; }
+
+        public int LateCount { get; set; }
+
+        public string TodayStatus { get; set; }
+    }
+
+    public class StudentAttendance
+    {
+        [Key] 
+        public int AttendanceId { get; set; }
+
+        [ForeignKey("Student")]
+        public int StudentId { get; set; }
+
+        public DateTime AttendanceDate { get; set; }
+
+        public string Status { get; set; }
+
+        public string MarkedBy { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public Student Student { get; set; }
+    }
+
 
 }

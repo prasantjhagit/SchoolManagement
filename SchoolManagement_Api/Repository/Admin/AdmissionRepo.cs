@@ -129,6 +129,59 @@ namespace SchoolManagement_Api.Reposirty.Admin
 
             return students;
         }
+
+        public async Task<List<TodayStudentStatusDto>> GetTodayStudentStatus()
+        {
+            try
+            {
+                var today = DateTime.Today;
+                var monthStart = new DateTime(today.Year, today.Month, 1);
+
+                var students = await _db.Students
+                    .Select(s => new TodayStudentStatusDto
+                    {
+                        StudentId = s.StudentId,
+                        StudentName = s.StudentName,
+                        RollNumber = s.RollNumber,
+
+                        PresentCount = _db.StudentAttendances
+                            .Where(a => a.StudentId == s.StudentId
+                                && a.Status == "Present"
+                                && a.AttendanceDate >= monthStart)
+                            .Count(),
+
+                        AbsentCount = _db.StudentAttendances
+                            .Where(a => a.StudentId == s.StudentId
+                                && a.Status == "Absent"
+                                && a.AttendanceDate >= monthStart)
+                            .Count(),
+
+                        LateCount = _db.StudentAttendances
+                            .Where(a => a.StudentId == s.StudentId
+                                && a.Status == "Late"
+                                && a.AttendanceDate >= monthStart)
+                            .Count(),
+
+                        TodayStatus = _db.StudentAttendances
+                            .Where(a => a.StudentId == s.StudentId
+                                && a.AttendanceDate.Date == today)
+                            .Select(a => a.Status)
+                            .FirstOrDefault() ?? "NotMarked"
+                    })
+                    .ToListAsync();
+
+                return students;
+            }
+            catch (Exception ex) 
+            {
+                return null;
+            }
+            finally
+            {
+
+            }
+           
+        }
     }
 
 

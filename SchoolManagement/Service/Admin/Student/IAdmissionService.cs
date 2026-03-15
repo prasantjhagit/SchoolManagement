@@ -9,5 +9,7 @@ namespace SchoolManagement_Ui.Service.Admin.Student
         Task<int> AddNewAdmissionAsync(AdmissionDto admissionDto, IFormFile studentPhoto, List<IFormFile> documentFiles);
         
         Task<List<StudentModel>> GetStudents();
+
+        Task<List<TodayStudentStatusDto>> GetTodayStudentStatus();
     }
 }

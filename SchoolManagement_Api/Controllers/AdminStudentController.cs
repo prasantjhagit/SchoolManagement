@@ -105,5 +105,16 @@ namespace SchoolManagement_Api.Controllers
                     data = students
                 });
         }
+        [HttpGet("GetTodayStudentStatus")]
+        public async Task<IActionResult> GetTodayStudentStatus()
+        {
+            var result = await _admissionService.GetTodayStudentStatus();
+
+            return Ok(new
+            {
+                success = true,
+                data = result
+            });
+        }
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace SchoolManagement_Api.Reposirty.Admin
+﻿using SchoolManagement_Api.DTO;
+
+namespace SchoolManagement_Api.Reposirty.Admin
 {
     public interface ILoginServiceRepo
     {
-        Task<string> LoginAsync(string email, string password);
+        Task<LoginResponseDTO> LoginAsync(LoginDTO model);
 
     }
 }
