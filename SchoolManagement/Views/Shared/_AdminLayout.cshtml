@@ -2,74 +2,81 @@
 <html>
 <head>
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+    <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
 
         body {
-            background: #f5f6fa;
-            font-family: Segoe UI;
+            background: #f4f6f9;
+            font-family: 'Segoe UI', sans-serif;
         }
 
-        /* SIDEBAR */
-
+        /* 🔷 SIDEBAR */
         .sidebar {
-            width: 212px;
+            width: 240px;
             height: 100vh;
             position: fixed;
-            background: white;
-            border-right: 1px solid #eaeaea;
-            padding: 20px;
+            background: linear-gradient(180deg, #1e293b, #0f172a);
+            color: #fff;
+            padding: 20px 10px;
             transition: 0.3s;
         }
 
+            .sidebar.collapsed {
+                width: 80px;
+            }
+
             .sidebar h4 {
-                font-weight: 600;
+                text-align: center;
                 margin-bottom: 25px;
+                font-weight: 600;
             }
 
             .sidebar a {
-                display: block;
+                display: flex;
+                align-items: center;
+                gap: 12px;
                 padding: 12px;
                 margin-bottom: 6px;
-                color: #555;
+                color: #cbd5e1;
                 text-decoration: none;
-                border-radius: 8px;
+                border-radius: 10px;
+                transition: 0.2s;
             }
 
                 .sidebar a:hover {
-                    background: #f1f3f7;
+                    background: rgba(255,255,255,0.08);
+                    color: #fff;
                 }
 
-        /* SUBMENU */
+            .sidebar i {
+                min-width: 20px;
+            }
 
-        .menu-item .submenu {
+            .sidebar span {
+                transition: 0.3s;
+            }
+
+            .sidebar.collapsed span {
+                display: none;
+            }
+
+        /* 🔷 SUBMENU */
+        .submenu {
             display: none;
-            padding-left: 15px;
+            padding-left: 20px;
         }
 
         .menu-item.open .submenu {
             display: block;
         }
 
-        /* COLLAPSE */
-
-        .sidebar.collapsed {
-            width: 80px;
-        }
-
-            .sidebar.collapsed span {
-                display: none;
-            }
-
-            .sidebar.collapsed h4 span {
-                display: none;
-            }
-
+        /* 🔷 MAIN */
         .main {
-            margin-left: 210px;
+            margin-left: 240px;
             transition: 0.3s;
         }
 
@@ -77,16 +84,15 @@
                 margin-left: 80px;
             }
 
-        /* TOPBAR */
-
+        /* 🔷 TOPBAR */
         .topbar {
-            background: white;
-            padding: 15px 25px;
-            border-bottom: 1px solid #eaeaea;
+            background: #fff;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
         }
 
         .content {
-            padding: 30px;
+            padding: 25px;
         }
 
     </style>
@@ -94,17 +100,17 @@
 
 <body>
 
+    <!-- 🔷 SIDEBAR -->
     <div class="sidebar" id="sidebar">
 
         <h4>
-            <img src="~/images/hollycrosslogo.png" width="45" />
+            <img src="~/images/hollycrosslogo.png" width="40" />
             <span>Dashboard</span>
         </h4>
 
         <a href="/Admin/DashboardPartial"><i class="fa fa-home"></i> <span>Overview</span></a>
 
-        <!-- STUDENTS MODULE -->
-
+        <!-- ✅ YOUR STUDENT MENU (UNCHANGED) -->
         <div class="menu-item">
 
             <a href="#" class="menu-toggle">
@@ -118,6 +124,7 @@
                     <a asp-controller="Admin" asp-action="Admission">
                         <i class="fa fa-user-plus"></i> <span>New Admission</span>
                     </a>
+
                     <a href="/Admin/StudentListPartial">
                         <i class="fa fa-list"></i> <span>Student List</span>
                     </a>
@@ -128,6 +135,18 @@
 
                     <a href="/Students/Marks">
                         <i class="fa fa-pen"></i> <span>Marks</span>
+                    </a>
+
+                    <a href="/Admin/StudentProfile">
+                        <i class="fa fa-id-card"></i> <span>Student Profile</span>
+                    </a>
+
+                    <a href="/Admin/promote">
+                        <i class="fa fa-arrow-up"></i> <span>Promote Students</span>
+                    </a>
+
+                    <a href="/Admin/TransferStudent">
+                        <i class="fa fa-right-left"></i> <span>Transfer Student</span>
                     </a>
                 }
 
@@ -146,25 +165,22 @@
 
         </div>
 
-        <!-- TEACHERS -->
+        <!-- OTHER -->
         @if (User.IsInRole("Admin"))
         {
             <a href="#"><i class="fa fa-chalkboard-user"></i> <span>Teachers</span></a>
         }
 
-        <!-- CLASSES -->
         @if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
         {
             <a href="#"><i class="fa fa-school"></i> <span>Classes</span></a>
         }
 
-        <!-- FINANCE -->
         @if (User.IsInRole("Admin"))
         {
             <a href="/Finance"><i class="fa fa-money-bill"></i> <span>Finance</span></a>
         }
 
-        <!-- REPORTS -->
         @if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
         {
             <a href="#"><i class="fa fa-chart-line"></i> <span>Reports</span></a>
@@ -172,108 +188,48 @@
 
     </div>
 
-    <!-- MAIN CONTENT -->
-
-    <div class="main">
+    <!-- 🔷 MAIN -->
+    <div class="main" id="main">
 
         <div class="topbar d-flex justify-content-between align-items-center">
 
             <div>
-
-                <button id="menuToggle" class="btn btn-light rounded-circle shadow-sm">
-                    <i id="toggleIcon" class="fa-solid fa-chevron-left"></i>
+                <button id="toggleBtn" class="btn btn-light">
+                    <i class="fa fa-bars"></i>
                 </button>
-
                 <span class="ms-2 fw-semibold">Admin Panel</span>
-
             </div>
 
             <div>
-
                 <i class="fa fa-bell me-3"></i>
-                <i class="fa fa-envelope me-3"></i>
                 <i class="fa fa-user"></i>
-
             </div>
 
         </div>
 
         <div class="content">
-
             @RenderBody()
-
         </div>
 
     </div>
 
-    <!-- SCRIPTS -->
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-
-        const toggleBtn = document.getElementById("menuToggle");
-        const sidebar = document.getElementById("sidebar");
-        const main = document.querySelector(".main");
-        const icon = document.getElementById("toggleIcon");
-
-        toggleBtn.addEventListener("click",function(){
-
-        sidebar.classList.toggle("collapsed");
-        main.classList.toggle("expanded");
-
-        if(sidebar.classList.contains("collapsed")){
-        icon.classList.remove("fa-chevron-left");
-        icon.classList.add("fa-chevron-right");
-        }else{
-        icon.classList.remove("fa-chevron-right");
-        icon.classList.add("fa-chevron-left");
-        }
-
+        // Sidebar toggle
+        document.getElementById("toggleBtn").addEventListener("click", function () {
+            document.getElementById("sidebar").classList.toggle("collapsed");
+            document.getElementById("main").classList.toggle("expanded");
         });
 
-    </script>
-
-    <script>
-
-        /* SUBMENU TOGGLE */
-
-        document.querySelectorAll(".menu-toggle").forEach(function(menu){
-
-        menu.addEventListener("click",function(e){
-
-        e.preventDefault();
-
-        let parent=this.parentElement;
-
-        parent.classList.toggle("open");
-
+        // Submenu toggle
+        document.querySelectorAll(".menu-toggle").forEach(menu => {
+            menu.addEventListener("click", function (e) {
+                e.preventDefault();
+                this.parentElement.classList.toggle("open");
+            });
         });
-
-        });
-
-    </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <script>
-
-        var ctx=document.getElementById("enrollmentChart");
-
-        if(ctx){
-
-        new Chart(ctx,{
-        type:"line",
-        data:{
-        labels:["Jan","Feb","Mar","Apr","May","Jun"],
-        datasets:[{
-        label:"Students",
-        data:[120,190,300,250,220,310],
-        borderWidth:2
-        }]
-        }
-        });
-
-        }
-
     </script>
 
 </body>

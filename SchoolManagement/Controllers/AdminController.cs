@@ -100,7 +100,54 @@ namespace SchoolManagement_Ui.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
-    }
 
+        [HttpGet]
+        public async Task<IActionResult> FilterStudentAttendance(string search, string studentClass, string section, DateTime? date)
+        {
+            var students = await _admissionService.GetTodayStudentStatus();
+
+            var query = students.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                query = query.Where(x =>
+                    x.StudentName.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                    x.RollNumber.Contains(search));
+            }
+            if (!string.IsNullOrEmpty(studentClass) && studentClass != "All")
+            {
+                query = query.Where(x => x.Class == studentClass);
+            }
+
+            if (!string.IsNullOrEmpty(section) && section != "All")
+            {
+                query = query.Where(x => x.Section == section);
+            }
+
+            if (date.HasValue)
+            {
+                query = query.Where(x => x.Date.Date == date.Value.Date);
+            }
+
+            var filteredData = query.ToList();
+
+            return Json(filteredData); 
+        }
+
+        public IActionResult Markspage()
+        {
+            return PartialView("_Markspage");
+        }
+        public IActionResult promote()
+        {
+            return PartialView("_promote");
+        }
+        public IActionResult TransferStudent()
+        {
+            return PartialView("_TransferStudent");
+        }
+        
+
+    }
 }
 
