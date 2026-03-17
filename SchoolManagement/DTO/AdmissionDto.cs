@@ -33,6 +33,7 @@
     }
     public class StudentModel
     {
+        public int StudentId { get; set; }
         public string RegistrationNumber { get; set; }
 
         public string SchoolCode { get; set; }

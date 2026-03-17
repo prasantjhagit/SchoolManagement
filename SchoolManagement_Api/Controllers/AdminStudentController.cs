@@ -116,5 +116,41 @@ namespace SchoolManagement_Api.Controllers
                 data = result
             });
         }
+        [HttpGet("GetStudentById")]
+        public async Task<IActionResult> GetStudentById(int id)
+        {
+            var data = await _admissionService.GetStudentById(id);
+
+            if (data == null)
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = "Student not found"
+                });
+            }
+
+            var result = new StudentModel
+            {
+                StudentId = data.StudentId,
+                StudentName = data.StudentName,
+                RollNumber = data.RollNumber,
+                Class = data.Class,
+                Section = data.Section,
+                Session = data.Session,
+                ParentPhone = data.ParentPhone,
+                FatherName = data.FatherName,
+                MotherName = data.MotherName,
+                DateOfBirth = data.DateOfBirth,
+                Gender = data.Gender,
+                Email = data.StudentEmail
+            };
+
+            return Ok(new
+            {
+                success = true,
+                data = result
+            });
+        }
     }
 }

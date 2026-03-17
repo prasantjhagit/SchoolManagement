@@ -14,5 +14,6 @@ namespace SchoolManagement_Api.Service.Admin
         Task AddDocumentsAsync(int studentId, List<DocumentDto> documents);
         Task<List<StudentModel>> GetStudents();
         Task<List<TodayStudentStatusDto>> GetTodayStudentStatus();
+        Task<Student> GetStudentById(int id);
     }
 }

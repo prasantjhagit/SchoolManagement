@@ -15,5 +15,6 @@ namespace SchoolManagement_Api.Reposirty.Admin
         Task<List<StudentModel>> GetStudents();
 
         Task<List<TodayStudentStatusDto>> GetTodayStudentStatus();
+        Task<Student> GetStudentById(int studentId);
     }
 }

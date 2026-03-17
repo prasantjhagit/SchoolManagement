@@ -5,7 +5,10 @@ using SchoolManagement_Api.Authentication;
 using SchoolManagement_Api.Reposirty.Admin;
 using SchoolManagement_Api.Service.Admin;
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddControllers();
+builder.Services.AddControllers(); builder.Services.AddControllers()
+    .AddJsonOptions(x =>
+        x.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowUI",
