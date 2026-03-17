@@ -87,6 +87,10 @@
         public int LateCount { get; set; }
 
         public string TodayStatus { get; set; }
+  
+        public string Class { get; set; }
+        public string Section { get; set; }
+        public DateTime Date { get; set; }
     }
 
 }
