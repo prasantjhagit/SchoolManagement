@@ -36,5 +36,9 @@ namespace SchoolManagement_Api.Service.Admin
         {
             throw new NotImplementedException();
         }
+        public async Task<Student> GetStudentById(int id)
+        {
+            return await _repo.GetStudentById(id);
+        }
     }
 }

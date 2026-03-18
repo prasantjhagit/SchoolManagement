@@ -135,7 +135,9 @@
                 <td>${student.fatherName ?? ""}</td>
                 <td><span class="badge bg-success">Active</span></td>
                 <td>
-                    <button class="btn btn-sm action-btn"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm action-btn" onclick="editStudent(${student.studentId})">
+        <i class="fas fa-edit"></i>
+    </button>
                     <button class="btn btn-sm action-btn"><i class="fa fa-trash" style="color:red" aria-hidden="true"></i></button>
                 </td>
             </tr>`;
@@ -272,7 +274,11 @@
         }
     });
 </script>
-
+<script>
+          function editStudent(studentId){
+        window.location.href = `/Admin/Admission?studentId=${studentId}`;
+    }
+</script>
 <script>
     function exportTableToExcel(filename = "Students.csv") {
         const table = document.querySelector(".student-table");

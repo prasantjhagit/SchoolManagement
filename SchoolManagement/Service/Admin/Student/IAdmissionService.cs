@@ -11,5 +11,6 @@ namespace SchoolManagement_Ui.Service.Admin.Student
         Task<List<StudentModel>> GetStudents();
 
         Task<List<TodayStudentStatusDto>> GetTodayStudentStatus();
+        Task<StudentModel> GetStudentById(int id);
     }
 }

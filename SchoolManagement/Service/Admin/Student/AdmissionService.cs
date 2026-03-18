@@ -115,4 +115,22 @@ public class AdmissionService : IAdmissionService
 
         return result?.Data ?? new List<TodayStudentStatusDto>();
     }
-}
+    public async Task<StudentModel> GetStudentById(int id)
+    {
+        var response = await _httpClient.GetAsync($"api/AdmissionApi/GetStudentById?id={id}");
+
+        response.EnsureSuccessStatusCode();
+
+        var json = await response.Content.ReadAsStringAsync();
+
+        var result = JsonSerializer.Deserialize<ApiResponse<StudentModel>>(
+            json,
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+        return result?.Data;
+    }
+
+}   

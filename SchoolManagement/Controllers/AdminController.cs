@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SchoolManagement_Ui.DTO;
+using SchoolManagement_Ui.Models;
 using SchoolManagement_Ui.Service.Admin.Student;
 
 namespace SchoolManagement_Ui.Controllers
@@ -146,7 +147,12 @@ namespace SchoolManagement_Ui.Controllers
         {
             return PartialView("_TransferStudent");
         }
-        
+        [HttpGet]
+        public async Task<IActionResult> GetStudentById(int id)
+        {
+            var student = await _admissionService.GetStudentById(id);
+            return Json(student);
+        }
 
     }
 }

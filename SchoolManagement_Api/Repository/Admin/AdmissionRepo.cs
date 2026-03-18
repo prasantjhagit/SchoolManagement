@@ -110,6 +110,7 @@ namespace SchoolManagement_Api.Reposirty.Admin
             var students = await _db.Students
                 .Select(s => new StudentModel
                 {
+                    StudentId = s.StudentId,
                     RegistrationNumber = s.RegistrationNumber,
                     SchoolCode = s.SchoolCode,
                     Class = s.Class,
@@ -181,6 +182,18 @@ namespace SchoolManagement_Api.Reposirty.Admin
 
             }
            
+        }
+        public async Task<Student> GetStudentById(int id)
+        {
+            try
+            {
+                return await _db.Students
+                    .FirstOrDefaultAsync(x => x.StudentId == id);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 
