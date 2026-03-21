@@ -1,27 +1,27 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Dashboard</title>
+    <title>School Management</title>
 
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <style>
-
         body {
-            background: #f4f6f9;
+            margin: 0;
             font-family: 'Segoe UI', sans-serif;
+            background: #eef2f7;
         }
 
-        /* 🔷 SIDEBAR */
+        /* 🔵 SIDEBAR */
         .sidebar {
-            width: 240px;
+            width: 260px;
             height: 100vh;
             position: fixed;
-            background: linear-gradient(180deg, #1e293b, #0f172a);
+            background: linear-gradient(180deg, #0a1f44, #0f2a5c);
             color: #fff;
-            padding: 20px 10px;
+            overflow-y: auto;
             transition: 0.3s;
         }
 
@@ -31,24 +31,24 @@
 
             .sidebar h4 {
                 text-align: center;
-                margin-bottom: 25px;
-                font-weight: 600;
+                padding: 20px 10px;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
             }
 
             .sidebar a {
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                padding: 12px;
-                margin-bottom: 6px;
+                padding: 12px 15px;
                 color: #cbd5e1;
                 text-decoration: none;
-                border-radius: 10px;
+                border-radius: 8px;
+                margin: 4px 10px;
                 transition: 0.2s;
             }
 
                 .sidebar a:hover {
-                    background: rgba(255,255,255,0.08);
+                    background: rgba(255,255,255,0.1);
                     color: #fff;
                 }
 
@@ -64,19 +64,25 @@
                 display: none;
             }
 
-        /* 🔷 SUBMENU */
+        /* SUBMENU */
         .submenu {
             display: none;
-            padding-left: 20px;
+            padding-left: 10px;
         }
 
         .menu-item.open .submenu {
             display: block;
         }
 
-        /* 🔷 MAIN */
+        .submenu a {
+            font-size: 14px;
+            padding: 8px 15px;
+            color: #94a3b8;
+        }
+
+        /* MAIN */
         .main {
-            margin-left: 240px;
+            margin-left: 260px;
             transition: 0.3s;
         }
 
@@ -84,15 +90,36 @@
                 margin-left: 80px;
             }
 
-        /* 🔷 TOPBAR */
+        /* TOPBAR */
         .topbar {
-            background: #fff;
-            padding: 15px 20px;
-            border-bottom: 1px solid #eee;
+            background: #0f2a5c;
+            color: #fff;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
+            .topbar .btn {
+                background: #1e3a8a;
+                color: #fff;
+                border: none;
+            }
+
+                .topbar .btn:hover {
+                    background: #2563eb;
+                }
+
+        /* CONTENT */
         .content {
             padding: 25px;
+        }
+
+        /* CARD */
+        .card-custom {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
 
     </style>
@@ -100,115 +127,240 @@
 
 <body>
 
-    <!-- 🔷 SIDEBAR -->
     <div class="sidebar" id="sidebar">
 
         <h4>
-            <img src="~/images/hollycrosslogo.png" width="40" />
-            <span>Dashboard</span>
+            <i class="fa fa-school"></i>
+            <span>SMS Panel</span>
         </h4>
 
-        <a href="/Admin/DashboardPartial"><i class="fa fa-home"></i> <span>Overview</span></a>
+        <!-- 1 Dashboard -->
+        <a href="#"><i class="fa fa-home"></i> <span>Dashboard</span></a>
 
-        <!-- ✅ YOUR STUDENT MENU (UNCHANGED) -->
+        <!-- 2 Student -->
         <div class="menu-item">
-
-            <a href="#" class="menu-toggle">
-                <i class="fa fa-user-graduate"></i> <span>Students</span>
-            </a>
-
+            <a href="#" class="menu-toggle"><i class="fa fa-user-graduate"></i><span>Student Management</span></a>
             <div class="submenu">
-
-                @if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
-                {
-                    <a asp-controller="Admin" asp-action="Admission">
-                        <i class="fa fa-user-plus"></i> <span>New Admission</span>
-                    </a>
-
-                    <a href="/Admin/StudentListPartial">
-                        <i class="fa fa-list"></i> <span>Student List</span>
-                    </a>
-
-                    <a href="/Admin/StudentAttendance">
-                        <i class="fa fa-calendar-check"></i> <span>Attendance</span>
-                    </a>
-
-                    <a href="/Students/Marks">
-                        <i class="fa fa-pen"></i> <span>Marks</span>
-                    </a>
-
-                    <a href="/Admin/StudentProfile">
-                        <i class="fa fa-id-card"></i> <span>Student Profile</span>
-                    </a>
-
-                    <a href="/Admin/promote">
-                        <i class="fa fa-arrow-up"></i> <span>Promote Students</span>
-                    </a>
-
-                    <a href="/Admin/TransferStudent">
-                        <i class="fa fa-right-left"></i> <span>Transfer Student</span>
-                    </a>
-                }
-
-                @if (User.IsInRole("Student"))
-                {
-                    <a href="/Students/MyProfile">
-                        <i class="fa fa-id-card"></i> <span>My Profile</span>
-                    </a>
-
-                    <a href="/Students/MyFees">
-                        <i class="fa fa-receipt"></i> <span>My Fees</span>
-                    </a>
-                }
-
+                <a href="Admission">2.1 Add New Student</a>
+                <a href="StudentListPartial">2.2 View All Students</a>
+                
+                <a href="#">2.7 Student Promotion</a>
+                <a href="#">2.8 Transfer Student</a>
+                <a href="#">2.9 Student Documents</a>
+                <a href="#">2.10 Student ID Cards</a>
             </div>
-
         </div>
 
-        <!-- OTHER -->
-        @if (User.IsInRole("Admin"))
-        {
-            <a href="#"><i class="fa fa-chalkboard-user"></i> <span>Teachers</span></a>
-        }
+        <!-- 3 Teacher -->
+        <div class="menu-item">
+            <a href="#" class="menu-toggle"><i class="fa fa-chalkboard-user"></i><span>Teacher/Staff Management</span></a>
+            <div class="submenu">
+                <a href="#">3.1 Add New Teacher/Staff</a>
+                <a href="#">3.2 View All Teachers/Staff</a>
+                <a href="#">3.3 Search Teacher/Staff</a>
+                <a href="#">3.4 Edit Details</a>
+                <a href="#">3.5 Assign Subjects/Classes</a>
+                <a href="#">3.6 Teacher Timetable</a>
+                <a href="#">3.7 Staff Payroll</a>
+                <a href="#">3.8 Leave Management</a>
+            </div>
+        </div>
 
-        @if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
-        {
-            <a href="#"><i class="fa fa-school"></i> <span>Classes</span></a>
-        }
+        <!-- 4 Class -->
+        <div class="menu-item">
+            <a href="#" class="menu-toggle"><i class="fa fa-school"></i><span>Class & Section</span></a>
+            <div class="submenu">
+                <a href="#">4.1 Create Class</a>
+                <a href="#">4.2 Assign Sections</a>
+                <a href="#">4.3 Assign Students</a>
+                <a href="#">4.4 Assign Teachers</a>
+                <a href="#">4.5 Class Timetable</a>
+                <a href="#">4.6 Room Allocation</a>
+                <a href="#">4.7 Reports</a>
+            </div>
+        </div>
 
-        @if (User.IsInRole("Admin"))
-        {
-            <a href="/Finance"><i class="fa fa-money-bill"></i> <span>Finance</span></a>
-        }
+        <!-- 5 Academic -->
+        <div class="menu-item">
+            <a href="#" class="menu-toggle"><i class="fa fa-book"></i><span>Academic Management</span></a>
+            <div class="submenu">
+                <a href="#">5.1 Subjects</a>
+                <a href="#">5.2 Syllabus</a>
+                <a href="#">5.3 Lesson Plans</a>
+                <a href="#">5.4 Assignments</a>
+                <a href="#">5.5 Homework</a>
+                <a href="#">5.6 Notice Board</a>
+                <a href="#">5.7 Events & Holidays</a>
+            </div>
+        </div>
 
-        @if (User.IsInRole("Admin") || User.IsInRole("Teacher"))
-        {
-            <a href="#"><i class="fa fa-chart-line"></i> <span>Reports</span></a>
-        }
+        <!-- 6 Fee -->
+        <div class="menu-item">
+            <a href="#" class="menu-toggle"><i class="fa fa-money-bill"></i><span>Fee Management</span></a>
+            <div class="submenu">
+                <a href="#">6.1 Fee Structure</a>
+                <a href="#">6.2 Fee Collection</a>
+                <a href="#">6.3 Fee Receipts</a>
+                <a href="#">6.4 Defaulters</a>
+                <a href="#">6.5 Reports</a>
+                <a href="#">6.6 Online Payment</a>
+                <a href="#">6.7 Refund</a>
+            </div>
+        </div>
+
+        <!-- 7 Attendance -->
+        <div class="menu-item">
+            <a href="#" class="menu-toggle"><i class="fa fa-calendar-check"></i><span>Attendance</span></a>
+            <div class="submenu">
+                <a href="#">7.1 Daily Attendance</a>
+                <a href="#">7.2 Reports</a>
+                <a href="#">7.3 Monthly Sheet</a>
+                <a href="#">7.4 Alerts</a>
+                <a href="#">7.5 Summary</a>
+                <a href="#">7.6 SMS Alerts</a>
+            </div>
+        </div>
+
+        <!-- 8 Exam -->
+        <div class="menu-item">
+            <a href="#" class="menu-toggle"><i class="fa fa-pen"></i><span>Examination</span></a>
+            <div class="submenu">
+                <a href="#">8.1 Exam Schedule</a>
+                <a href="#">8.2 Create Exam</a>
+                <a href="#">8.3 Enter Marks</a>
+                <a href="#">8.4 Result Cards</a>
+                <a href="#">8.5 Analysis</a>
+                <a href="#">8.6 Rank Cards</a>
+                <a href="#">8.7 Re-evaluation</a>
+            </div>
+        </div>
+
+        <!-- 9 Library -->
+        <div class="menu-item">
+            <a href="#" class="menu-toggle"><i class="fa fa-book-open"></i><span>Library</span></a>
+            <div class="submenu">
+                <a href="#">9.1 Add Books</a>
+                <a href="#">9.2 Issue/Return</a>
+                <a href="#">9.3 Membership</a>
+                <a href="#">9.4 Fine</a>
+                <a href="#">9.5 Search</a>
+                <a href="#">9.6 Reports</a>
+            </div>
+        </div>
+
+        <!-- 10 Transport -->
+        <div class="menu-item">
+            <a href="#" class="menu-toggle"><i class="fa fa-bus"></i><span>Transport</span></a>
+            <div class="submenu">
+                <a href="#">10.1 Vehicles</a>
+                <a href="#">10.2 Routes</a>
+                <a href="#">10.3 Student Allocation</a>
+                <a href="#">10.4 Driver</a>
+                <a href="#">10.5 Fee</a>
+            </div>
+        </div>
+
+        <!-- 11 Hostel -->
+        <div class="menu-item">
+            <a href="#" class="menu-toggle"><i class="fa fa-bed"></i><span>Hostel</span></a>
+            <div class="submenu">
+                <a href="#">11.1 Room Allocation</a>
+                <a href="#">11.2 Hostel Fee</a>
+                <a href="#">11.3 Warden</a>
+                <a href="#">11.4 Attendance</a>
+                <a href="#">11.5 Maintenance</a>
+            </div>
+        </div>
+
+        <!-- 12 Reports -->
+        <div class="menu-item">
+            <a href="#" class="menu-toggle"><i class="fa fa-chart-line"></i><span>Reports & Analytics</span></a>
+            <div class="submenu">
+                <a href="#">12.1 Student Reports</a>
+                <a href="#">12.2 Fee Reports</a>
+                <a href="#">12.3 Attendance Reports</a>
+                <a href="#">12.4 Exam Results</a>
+                <a href="#">12.5 Staff Reports</a>
+                <a href="#">12.6 Financial Reports</a>
+                <a href="#">12.7 Custom Reports</a>
+            </div>
+        </div>
+
+        <!-- 13 Settings -->
+        <div class="menu-item">
+            <a href="#" class="menu-toggle"><i class="fa fa-gear"></i><span>Settings</span></a>
+            <div class="submenu">
+                <a href="#">13.1 School Profile</a>
+                <a href="#">13.2 Academic Year</a>
+                <a href="#">13.3 SMS/Email</a>
+                <a href="#">13.4 Backup</a>
+                <a href="#">13.5 Configuration</a>
+                <a href="#">13.6 Holiday Calendar</a>
+            </div>
+        </div>
+
+        <!-- 14 Users -->
+        <div class="menu-item">
+            <a href="#" class="menu-toggle"><i class="fa fa-users"></i><span>User Management</span></a>
+            <div class="submenu">
+                <a href="#">14.1 Add Users</a>
+                <a href="#">14.2 Roles & Permissions</a>
+                <a href="#">14.3 Reset Password</a>
+                <a href="#">14.4 Activity Logs</a>
+            </div>
+        </div>
+
+        <!-- Logout -->
+        <a href="#"><i class="fa fa-sign-out-alt"></i><span>Logout</span></a>
 
     </div>
 
-    <!-- 🔷 MAIN -->
+    <!-- 🔵 MAIN -->
     <div class="main" id="main">
 
-        <div class="topbar d-flex justify-content-between align-items-center">
-
+        <!-- TOPBAR -->
+        <div class="topbar">
             <div>
-                <button id="toggleBtn" class="btn btn-light">
+                <button id="toggleBtn" class="btn">
                     <i class="fa fa-bars"></i>
                 </button>
-                <span class="ms-2 fw-semibold">Admin Panel</span>
+                <span class="ms-2">Admin Dashboard</span>
             </div>
 
             <div>
                 <i class="fa fa-bell me-3"></i>
                 <i class="fa fa-user"></i>
             </div>
-
         </div>
 
+        <!-- CONTENT -->
         <div class="content">
+
+           @*  <div class="row">
+                <div class="col-md-4">
+                    <div class="card card-custom p-3">
+                        <h5>Total Students</h5>
+                        <h3>500</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card card-custom p-3">
+                        <h5>Total Teachers</h5>
+                        <h3>50</h3>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card card-custom p-3">
+                        <h5>Revenue</h5>
+                        <h3>₹2,50,000</h3>
+                    </div>
+                </div>
+            </div>
+ *@
             @RenderBody()
+
         </div>
 
     </div>
@@ -217,13 +369,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Sidebar toggle
         document.getElementById("toggleBtn").addEventListener("click", function () {
             document.getElementById("sidebar").classList.toggle("collapsed");
             document.getElementById("main").classList.toggle("expanded");
         });
 
-        // Submenu toggle
         document.querySelectorAll(".menu-toggle").forEach(menu => {
             menu.addEventListener("click", function (e) {
                 e.preventDefault();
