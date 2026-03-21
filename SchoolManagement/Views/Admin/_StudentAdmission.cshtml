@@ -4,78 +4,89 @@
 }
 
 <style>
+    body {
+        background: #f4f6f9;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .page-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
     .admission-card {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        padding: 30px;
-        background: #ffffff;
+        background: #fff;
         border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        padding: 25px;
+        margin-bottom: 20px;
+        border-left: 5px solid #28a745;
     }
 
     .section-title {
-        font-size: 1.1rem;
+        font-size: 15px;
         font-weight: 600;
-        color: #4a4a4a;
-        margin-bottom: 20px;
-        border-left: 4px solid #28a745;
-        padding-left: 10px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
 
-    .form-control,
-    .form-select {
-        border-radius: 10px;
-        transition: all 0.3s;
+    .form-control, .form-select {
+        border-radius: 8px;
+        padding: 10px;
     }
 
-        .form-control:focus,
-        .form-select:focus {
-            border-color: #28a745;
-            box-shadow: 0 0 8px rgba(40, 167, 69, 0.2);
-        }
-
-    .btn-custom {
-        border-radius: 10px;
-        padding: 8px 25px;
-        font-weight: 500;
+    .sticky-actions {
+        position: sticky;
+        bottom: 0;
+        background: #fff;
+        padding: 15px;
+        border-top: 1px solid #eee;
+        text-align: right;
     }
-
-    .btn-success:hover {
-        background: #218838;
-    }
-
-    .btn-secondary:hover {
-        background: #6c757d;
-    }
-
-    textarea.form-control {
-        resize: none;
-    }
-
-    /* validation */
 
     .validation-error {
-        color: #dc3545;
-        font-size: 13px;
-        margin-top: 4px;
-        display: block;
+        color: red;
+        font-size: 12px;
     }
 
     .input-error {
-        border-color: #dc3545 !important;
+        border-color: red !important;
+    }
+
+    #photoPreview {
+        width: 100px;
+        margin-top: 10px;
+        display: none;
+        border-radius: 10px;
     }
 </style>
 
-<h4 class="mb-4 text-success">New Student Admission</h4>
+<div class="page-header">
+    <div class="page-title">
+        <i class="fa fa-user-plus text-success"></i> New Student Admission
+    </div>
+</div>
 
-<div class="admission-card">
+<form id="admissionForm" enctype="multipart/form-data">
+    <input type="hidden" id="StudentId" name="StudentId" value="0" />
 
-    <form id="admissionForm" enctype="multipart/form-data">
-        <input type="hidden" id="StudentId" name="StudentId" value="0" />
-        <div class="section-title">Student Information</div>
+    <!-- STUDENT INFO -->
+    <div class="admission-card">
+        <div class="section-title"><i class="fa fa-user"></i> Student Information</div>
 
-        <div class="row g-3 mb-4">
+        <div class="row g-3">
 
             <div class="col-md-3">
-                <input type="text" id="schoolCode" name="SchoolCode" class="form-control" placeholder="School Code (ABC)" />
+                <input type="text" id="schoolCode" name="SchoolCode" class="form-control" placeholder="School Code" />
                 <label class="validation-error" id="schoolCodeError"></label>
             </div>
 
@@ -110,20 +121,20 @@
                 <input type="text" id="registrationNumber" name="RegistrationNumber" class="form-control" placeholder="Registration Number" />
             </div>
 
-            <div class="col-md-4 mt-3">
+            <div class="col-md-4">
                 <input type="text" id="StudentName" name="StudentName" class="form-control" placeholder="Student Name" />
                 <label class="validation-error" id="StudentNameError"></label>
             </div>
 
-            <div class="col-md-4 mt-3">
+            <div class="col-md-4">
                 <input type="date" name="AdmissionDate" class="form-control" />
             </div>
 
-            <div class="col-md-4 mt-3">
+            <div class="col-md-4">
                 <input type="text" name="RollNumber" class="form-control" placeholder="Roll Number" />
             </div>
 
-            <div class="col-md-3 mt-3">
+            <div class="col-md-3">
                 <select name="Section" class="form-select">
                     <option>Select Section</option>
                     <option>A</option>
@@ -133,28 +144,24 @@
             </div>
 
         </div>
+    </div>
 
-        <div class="section-title">Parents Information</div>
+    <!-- PARENTS -->
+    <div class="admission-card">
+        <div class="section-title"><i class="fa fa-users"></i> Parents Information</div>
 
-        <div class="row g-3 mb-4">
-
-            <div class="col-md-4">
-                <input type="text" name="FatherName" class="form-control" placeholder="Father Name" />
-            </div>
-
-            <div class="col-md-4">
-                <input type="text" name="MotherName" class="form-control" placeholder="Mother Name" />
-            </div>
-
-            <div class="col-md-4">
-                <input type="text" name="ParentPhone" class="form-control" placeholder="Parent Phone" />
-            </div>
-
+        <div class="row g-3">
+            <div class="col-md-4"><input type="text" name="FatherName" class="form-control" placeholder="Father Name" /></div>
+            <div class="col-md-4"><input type="text" name="MotherName" class="form-control" placeholder="Mother Name" /></div>
+            <div class="col-md-4"><input type="text" name="ParentPhone" class="form-control" placeholder="Parent Phone" /></div>
         </div>
+    </div>
 
-        <div class="section-title">Student Details</div>
+    <!-- STUDENT DETAILS -->
+    <div class="admission-card">
+        <div class="section-title"><i class="fa fa-id-card"></i> Student Details</div>
 
-        <div class="row g-3 mb-4">
+        <div class="row g-3">
 
             <div class="col-md-3">
                 <input type="date" name="DateOfBirth" class="form-control" />
@@ -174,14 +181,18 @@
             </div>
 
             <div class="col-md-3">
-                <input type="file" name="studentPhoto" class="form-control" />
+                <input type="file" name="studentPhoto" class="form-control" onchange="previewPhoto(event)" />
+                <img id="photoPreview" />
             </div>
 
         </div>
+    </div>
 
-        <div class="section-title">Address</div>
+    <!-- ADDRESS -->
+    <div class="admission-card">
+        <div class="section-title"><i class="fa fa-map-marker-alt"></i> Address</div>
 
-        <div class="row g-3 mb-3">
+        <div class="row g-3">
 
             <div class="col-md-3">
                 <input type="text" id="pincode" name="Pincode" class="form-control" placeholder="Enter PIN Code" />
@@ -201,15 +212,17 @@
 
         </div>
 
-        <div class="row g-3 mb-4">
-            <div class="col-md-12">
+        <div class="mt-3">
 <textarea id="address" name="FullAddress" class="form-control" rows="2" placeholder="Address"></textarea>
-            </div>
         </div>
 
-        <div class="section-title">Address Proof Upload</div>
+    </div>
 
-        <div class="row g-3 mb-4">
+    <!-- DOCUMENT -->
+    <div class="admission-card">
+        <div class="section-title"><i class="fa fa-file-upload"></i> Address Proof Upload</div>
+
+        <div class="row g-3">
 
             <div class="col-md-4">
                 <select name="Documents[0].DocumentType" class="form-select">
@@ -231,207 +244,81 @@
             </div>
 
         </div>
+    </div>
 
-        <hr>
+    <!-- BUTTON -->
+    <div class="sticky-actions">
+        <button type="submit" id="saveBtn" class="btn btn-success">
+            <i class="fa fa-save"></i> Save
+        </button>
 
-        <div class="text-end">
-            <button type="submit" id="saveBtn" class="btn btn-success btn-custom">
-                <i class="fa fa-save"></i> Save
-            </button>
+        <button type="reset" class="btn btn-secondary">
+            Reset
+        </button>
+    </div>
 
-            <button type="reset" class="btn btn-secondary btn-custom">
-                Reset
-            </button>
-        </div>
-
-    </form>
-
-</div>
-
-<br>
-
-<div id="studentListContainer"></div>
+</form>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 <script>
 
-    toastr.options = {
-    positionClass: "toast-top-right",
-    closeButton: true,
-    progressBar: true,
-    timeOut: "3000"
-    };
+    toastr.options = { positionClass: "toast-top-right" };
 
-    function clearErrors(){
-
-    document.querySelectorAll(".validation-error")
-    .forEach(x=>x.innerText="");
-
-    document.querySelectorAll(".form-control,.form-select")
-    .forEach(x=>x.classList.remove("input-error"));
-
+    function previewPhoto(e){
+        const img=document.getElementById("photoPreview");
+        img.src=URL.createObjectURL(e.target.files[0]);
+        img.style.display="block";
     }
 
     function validateForm(){
+        let valid=true;
 
-    let valid=true;
-
-    clearErrors();
-
-    let schoolCode=document.getElementById("schoolCode").value.trim();
-    let studentName=document.getElementById("StudentName").value.trim();
-    let classSelect=document.getElementById("classSelect").value;
-    let sessionSelect=document.getElementById("sessionSelect").value;
-
-    if(schoolCode===""){
-    document.getElementById("schoolCodeError").innerText="School Code required";
-    document.getElementById("schoolCode").classList.add("input-error");
-    valid=false;
-    }
-
-    if(classSelect===""){
-    document.getElementById("classSelectError").innerText="Class required";
-    document.getElementById("classSelect").classList.add("input-error");
-    valid=false;
-    }
-
-    if(sessionSelect===""){
-    document.getElementById("sessionSelectError").innerText="Session required";
-    document.getElementById("sessionSelect").classList.add("input-error");
-    valid=false;
-    }
-
-    if(studentName===""){
-    document.getElementById("StudentNameError").innerText="Student Name required";
-    document.getElementById("StudentName").classList.add("input-error");
-    valid=false;
-    }
-
-    return valid;
-
-    }
-
-    /* remove error while typing */
-
-    document.querySelectorAll("input").forEach(input=>{
-    input.addEventListener("input",function(){
-
-    const err=document.getElementById(this.id+"Error");
-    if(err){ err.innerText=""; }
-
-    this.classList.remove("input-error");
-
-    });
-    });
-
-    document.querySelectorAll("select").forEach(select=>{
-    select.addEventListener("change",function(){
-
-    const err=document.getElementById(this.id+"Error");
-    if(err){ err.innerText=""; }
-
-    this.classList.remove("input-error");
-
-    });
-    });
-
-    document.getElementById("admissionForm").addEventListener("submit", async function (e) {
-
-    e.preventDefault();
-
-    if(!validateForm()){
-    return;
-    }
-
-    const form=this;
-    const formData=new FormData(form);
-    const saveBtn=document.getElementById("saveBtn");
-
-    saveBtn.disabled=true;
-    saveBtn.innerHTML='<i class="fa fa-spinner fa-spin"></i> Saving...';
-
-    try{
-
-    const response=await fetch('/Admin/SaveAdmission',{
-    method:'POST',
-    body:formData
-    });
-
-    const result=await response.json();
-
-    if(result.success){
-
-    toastr.success("Student Admission Saved Successfully");
-    form.reset();
-
-    }else{
-
-    toastr.error(result.message);
-
-    }
-
-    }catch{
-
-    toastr.error("Server Error");
-
-    }
-
-    saveBtn.disabled=false;
-    saveBtn.innerHTML='<i class="fa fa-save"></i> Save';
-
-    });
-
-</script>
-<script>
-        document.addEventListener("DOMContentLoaded", async function(){
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const studentId = urlParams.get("studentId");
-
-        if(studentId){
-
-            try{
-                const res = await fetch(`/Admin/GetStudentById?id=${studentId}`);
-                const data = await res.json();
-
-                // ❌ agar list hota to data[0]
-                // ✅ ab direct object hai
-                if(data){
-
-                    // hidden field
-                    document.getElementById("StudentId").value = data.studentId;
-
-                    // form fill
-                    document.getElementById("schoolCode").value = data.schoolCode || "";
-                    document.getElementById("classSelect").value = data.class || "";
-                    document.getElementById("sessionSelect").value = data.session || "";
-                    document.getElementById("registrationNumber").value = data.registrationNumber || "";
-                    document.getElementById("StudentName").value = data.studentName || "";
-
-                    document.querySelector('[name="AdmissionDate"]').value = data.admissionDate?.split("T")[0] || "";
-                    document.querySelector('[name="RollNumber"]').value = data.rollNumber || "";
-                    document.querySelector('[name="Section"]').value = data.section || "";
-
-                    document.querySelector('[name="FatherName"]').value = data.fatherName || "";
-                    document.querySelector('[name="MotherName"]').value = data.motherName || "";
-                    document.querySelector('[name="ParentPhone"]').value = data.parentPhone || "";
-
-                    document.querySelector('[name="DateOfBirth"]').value = data.dateOfBirth?.split("T")[0] || "";
-                    document.querySelector('[name="Gender"]').value = data.gender || "";
-                    document.querySelector('[name="Email"]').value = data.studentEmail || "";
-
-                    // button change
-                    const saveBtn = document.getElementById("saveBtn");
-                    saveBtn.innerHTML = '<i class="fa fa-edit"></i> Update';
-
-                    // title change
-                    document.querySelector("h4").innerText = "Edit Student Admission";
-                }
-
-            }catch{
-                toastr.error("Error loading student data");
-            }
+        if(!schoolCode.value){
+            schoolCodeError.innerText="Required"; valid=false;
         }
+        if(!StudentName.value){
+            StudentNameError.innerText="Required"; valid=false;
+        }
+        if(!classSelect.value){
+            classSelectError.innerText="Required"; valid=false;
+        }
+        if(!sessionSelect.value){
+            sessionSelectError.innerText="Required"; valid=false;
+        }
+
+        return valid;
+    }
+
+    document.getElementById("admissionForm").addEventListener("submit", async function(e){
+
+        e.preventDefault();
+        if(!validateForm()) return;
+
+        const formData=new FormData(this);
+        const btn=document.getElementById("saveBtn");
+
+        btn.disabled=true;
+        btn.innerHTML="Saving...";
+
+        try{
+            const res=await fetch('/Admin/SaveAdmission',{method:'POST',body:formData});
+            const result=await res.json();
+
+            if(result.success){
+                toastr.success("Saved Successfully");
+                this.reset();
+                photoPreview.style.display="none";
+            }else{
+                toastr.error(result.message);
+            }
+
+        }catch{
+            toastr.error("Server Error");
+        }
+
+        btn.disabled=false;
+        btn.innerHTML="Save";
     });
+
 </script>

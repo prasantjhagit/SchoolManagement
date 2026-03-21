@@ -2,176 +2,200 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<!-- STAT CARDS -->
+<!-- 🔷 FILTER BAR -->
+<div class="card border-0 shadow-sm p-3 mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">📊 Dashboard Overview</h5>
+
+        <div>
+            <button class="btn btn-sm btn-outline-primary me-1">Daily</button>
+            <button class="btn btn-sm btn-primary me-1">Weekly</button>
+            <button class="btn btn-sm btn-outline-primary">Monthly</button>
+        </div>
+    </div>
+</div>
+
+<!-- 🔷 MAIN STATS -->
 <div class="row g-4">
 
+    <!-- Students -->
     <div class="col-md-3">
-        <div class="card shadow-sm border-0 p-3">
+        <div class="card border-0 shadow-sm p-3">
             <div class="d-flex justify-content-between">
                 <div>
-                    <p class="text-muted mb-1">Total Students</p>
-                    <h3 class="fw-bold">1,245</h3>
+                    <small class="text-muted">Students</small>
+                    <h3>1245</h3>
                 </div>
-                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width:50px;height:50px;">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width:55px;height:55px;">
                     <i class="fa fa-user-graduate"></i>
                 </div>
             </div>
-            <p class="text-success mt-2 mb-0">+12% this month</p>
+            <small class="text-success">+12% Growth</small>
         </div>
     </div>
 
+    <!-- Teachers -->
     <div class="col-md-3">
-        <div class="card shadow-sm border-0 p-3">
+        <div class="card border-0 shadow-sm p-3">
             <div class="d-flex justify-content-between">
                 <div>
-                    <p class="text-muted mb-1">Total Teachers</p>
-                    <h3 class="fw-bold">86</h3>
+                    <small class="text-muted">Teachers</small>
+                    <h3>86</h3>
                 </div>
-                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width:50px;height:50px;">
+                <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width:55px;height:55px;">
                     <i class="fa fa-chalkboard-user"></i>
                 </div>
             </div>
-            <p class="text-success mt-2 mb-0">+4 new teachers</p>
+            <small class="text-success">+4 Added</small>
         </div>
     </div>
 
+    <!-- Finance -->
     <div class="col-md-3">
-        <div class="card shadow-sm border-0 p-3">
+        <div class="card border-0 shadow-sm p-3">
             <div class="d-flex justify-content-between">
                 <div>
-                    <p class="text-muted mb-1">Total Classes</p>
-                    <h3 class="fw-bold">32</h3>
+                    <small class="text-muted">Revenue</small>
+                    <h3>₹2.5L</h3>
                 </div>
-                <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center" style="width:50px;height:50px;">
-                    <i class="fa fa-school"></i>
+                <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center" style="width:55px;height:55px;">
+                    <i class="fa fa-money-bill"></i>
                 </div>
             </div>
-            <p class="text-muted mt-2 mb-0">Active this semester</p>
+            <small class="text-success">+8% Growth</small>
         </div>
     </div>
 
+    <!-- Attendance -->
     <div class="col-md-3">
-        <div class="card shadow-sm border-0 p-3">
+        <div class="card border-0 shadow-sm p-3">
             <div class="d-flex justify-content-between">
                 <div>
-                    <p class="text-muted mb-1">Total Courses</p>
-                    <h3 class="fw-bold">54</h3>
+                    <small class="text-muted">Attendance</small>
+                    <h3>92%</h3>
                 </div>
-                <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style="width:50px;height:50px;">
-                    <i class="fa fa-book"></i>
+                <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style="width:55px;height:55px;">
+                    <i class="fa fa-calendar-check"></i>
                 </div>
             </div>
-            <p class="text-muted mt-2 mb-0">Updated weekly</p>
+            <small class="text-danger">-2% Drop</small>
         </div>
     </div>
 
 </div>
 
+<!-- 🔷 MODULE OVERVIEW -->
+<div class="row g-4 mt-1">
 
-<!-- CHART AREA -->
+    <div class="col-md-2">
+        <div class="card text-center p-3 shadow-sm border-0">
+            <i class="fa fa-user-graduate fa-2x text-primary"></i>
+            <p class="mt-2 mb-0">Students</p>
+            <strong>1245</strong>
+        </div>
+    </div>
 
-<div class="row mt-0 g-4">
+    <div class="col-md-2">
+        <div class="card text-center p-3 shadow-sm border-0">
+            <i class="fa fa-chalkboard-user fa-2x text-success"></i>
+            <p class="mt-2 mb-0">Teachers</p>
+            <strong>86</strong>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card text-center p-3 shadow-sm border-0">
+            <i class="fa fa-bed fa-2x text-warning"></i>
+            <p class="mt-2 mb-0">Hostel</p>
+            <strong>120</strong>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card text-center p-3 shadow-sm border-0">
+            <i class="fa fa-bus fa-2x text-danger"></i>
+            <p class="mt-2 mb-0">Vehicles</p>
+            <strong>15</strong>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card text-center p-3 shadow-sm border-0">
+            <i class="fa fa-pen fa-2x text-info"></i>
+            <p class="mt-2 mb-0">Exams</p>
+            <strong>6</strong>
+        </div>
+    </div>
+
+    <div class="col-md-2">
+        <div class="card text-center p-3 shadow-sm border-0">
+            <i class="fa fa-calendar-check fa-2x text-secondary"></i>
+            <p class="mt-2 mb-0">Attendance</p>
+            <strong>92%</strong>
+        </div>
+    </div>
+
+</div>
+
+<!-- 🔷 CHART + FINANCE -->
+<div class="row mt-1 g-4">
 
     <div class="col-md-8">
-
         <div class="card shadow-sm border-0 p-3">
-
-            <h5 class="mb-3">Student Enrollment Trend</h5>
-
-            <canvas id="enrollmentChart" height="130"></canvas>
-
+            <h5>📈 Performance Overview</h5>
+            <canvas id="mainChart" height="120"></canvas>
         </div>
-
     </div>
 
-
     <div class="col-md-4">
+        <div class="card shadow-sm border-0 p-3">
+            <h5>💰 Finance Summary</h5>
 
-        <div class="card shadow-sm border-0 p-4">
-
-            <h5 class="mb-3">Quick Stats</h5>
-
-            <div class="d-flex justify-content-between mb-2">
-                <span>Total Departments</span>
-                <strong>12</strong>
-            </div>
-
-            <div class="d-flex justify-content-between mb-2">
-                <span>Active Courses</span>
-                <strong>41</strong>
-            </div>
-
-            <div class="d-flex justify-content-between mb-2">
-                <span>Pending Approvals</span>
-                <strong class="text-danger">6</strong>
+            <div class="d-flex justify-content-between">
+                <span>Total Fees</span>
+                <strong>₹5,00,000</strong>
             </div>
 
             <div class="d-flex justify-content-between">
-                <span>New Admissions</span>
-                <strong class="text-success">23</strong>
+                <span>Collected</span>
+                <strong class="text-success">₹4,20,000</strong>
             </div>
 
+            <div class="d-flex justify-content-between">
+                <span>Pending</span>
+                <strong class="text-danger">₹80,000</strong>
+            </div>
         </div>
-
     </div>
 
 </div>
 
+<!-- 🔷 ACTIVITY + ALERTS -->
+<div class="row mt-1 g-4">
 
-
-<!-- RECENT ACTIVITY + ANNOUNCEMENTS -->
-
-<div class="row mt-0 g-4">
-
+    <!-- Activity -->
     <div class="col-md-6">
-
-        <div class="card shadow-sm border-0 p-4">
-
-            <h5 class="mb-3">Recent Activities</h5>
+        <div class="card shadow-sm border-0 p-3">
+            <h5>🕒 Daily Activities</h5>
 
             <ul class="list-group list-group-flush">
-
-                <li class="list-group-item">New student <strong>John Carter</strong> enrolled</li>
-
-                <li class="list-group-item">Teacher <strong>Emma Smith</strong> updated marks</li>
-
-                <li class="list-group-item">Class schedule updated</li>
-
-                <li class="list-group-item">New course <strong>Computer Science</strong> added</li>
-
-                <li class="list-group-item">Exam timetable published</li>
-
+                <li class="list-group-item">📌 New Admission (5 Students)</li>
+                <li class="list-group-item">📌 Fees Collected ₹20,000</li>
+                <li class="list-group-item">📌 Attendance Updated</li>
+                <li class="list-group-item">📌 Exam Marks Submitted</li>
             </ul>
-
         </div>
-
     </div>
 
-
+    <!-- Alerts -->
     <div class="col-md-6">
+        <div class="card shadow-sm border-0 p-3">
+            <h5>⚠ Alerts & Notifications</h5>
 
-        <div class="card shadow-sm border-0 p-4">
-
-            <h5 class="mb-3">Announcements</h5>
-
-            <div class="mb-3">
-                <strong>Mid Term Exams</strong>
-                <p class="text-muted mb-0">Mid term exams will start from next Monday.</p>
-            </div>
-
-            <div class="mb-3">
-                <strong>New Admission Cycle</strong>
-                <p class="text-muted mb-0">Admissions for the next academic year are now open.</p>
-            </div>
-
-            <div>
-                <strong>Staff Meeting</strong>
-                <p class="text-muted mb-0">Meeting scheduled on Friday at 3 PM.</p>
-            </div>
-
+            <div class="mb-2 text-danger">⚠ 10 Students Fee Pending</div>
+            <div class="mb-2 text-warning">⚠ Low Attendance in Class 8</div>
+            <div class="mb-2 text-info">ℹ Exam Schedule Released</div>
         </div>
-
     </div>
 
 </div>
-
