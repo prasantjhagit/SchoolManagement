@@ -152,5 +152,103 @@ namespace SchoolManagement_Api.Controllers
                 data = result
             });
         }
+        [HttpGet("GetTransferHistoryByStudentId")]
+        public async Task<IActionResult> GetTransferHistoryByStudent()
+        {
+            var historyList = await _admissionService.GetTransferHistoryByStudent();
+
+            if (historyList == null || !historyList.Any())
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = "No transfer history found for this student"
+                });
+            }
+
+            // Map to a model suitable for UI
+            var result = historyList.Select(h => new
+            {
+                h.TransferId,
+                h.StudentName,
+                h.StudentId,
+                AdmissionDate = h.AdmissionDate.ToString("yyyy-MM-dd"),
+                h.TransferType,
+                TransferDate = h.TransferDate.ToString("yyyy-MM-dd"),
+                h.FromClass,
+                h.FromSection,
+                h.ToClass,
+                h.ToSection,
+                TransferReason = h.Reason,
+                Status = h.Status,
+                CreatedAt = h.CreatedAt.ToString("yyyy-MM-dd")
+            }).ToList();
+
+            return Ok(new
+            {
+                success = true,
+                data = result
+            });
+        }
+        [HttpGet("GetStudentBySearch")]
+        public async Task<IActionResult> GetStudentBySearch(string searchText)
+        {
+            var data = await _admissionService.GetStudentBySearch(searchText);
+
+            if (data == null)
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = "Student not found"
+                });
+            }
+
+            var result = new StudentModel
+            {
+                StudentId = data.StudentId,
+                StudentName = data.StudentName,
+                RollNumber = data.RollNumber,
+                Class = data.Class,
+                Section = data.Section,
+                Session = data.Session,
+                ParentPhone = data.ParentPhone,
+                FatherName = data.FatherName,
+                MotherName = data.MotherName,
+                DateOfBirth = data.DateOfBirth,
+                Gender = data.Gender,
+                Email = data.StudentEmail
+            };
+
+            return Ok(new
+            {
+                success = true,
+                data = result
+            });
+        }
+        [HttpPost("SaveTransfer")]
+        public async Task<IActionResult> SaveTransfer([FromBody] TransferModelDto studentTransfer)
+        {
+            try
+            {
+                var result =
+                    await _admissionService.SaveTransferAsync(studentTransfer);
+
+                return Ok(new
+                {
+                    Success = true,
+                    Data = result,
+                    Message = "Transfer Saved Successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = ex.Message
+                });
+            }
+        }
     }
 }

@@ -6,7 +6,6 @@ namespace SchoolManagement_Api.Reposirty.Admin
     {
         // Save student admission data only (no files)
         Task<int> AddNewAdmission(AdmissionDto admissionDto);
-
         // Optional: separate method for updating photo path
         Task UpdatePhotoPathAsync(int studentId, string photoPath);
 
@@ -16,5 +15,10 @@ namespace SchoolManagement_Api.Reposirty.Admin
 
         Task<List<TodayStudentStatusDto>> GetTodayStudentStatus();
         Task<Student> GetStudentById(int studentId);
+        Task<List<TransferModelDto>> GetTransferHistoryByStudent();
+        Task<Student> GetStudentBySearch(string searchText);
+        Task<bool> SaveTransferAsync(TransferModelDto studentTransfer);
+
+
     }
 }

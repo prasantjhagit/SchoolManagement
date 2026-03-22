@@ -153,7 +153,52 @@ namespace SchoolManagement_Ui.Controllers
             var student = await _admissionService.GetStudentById(id);
             return Json(student);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetStudentBySearch(string searchText)
+        {
+            if (string.IsNullOrEmpty(searchText))
+                return Json(null);
 
+            var student = await _admissionService.GetStudentBySearch(searchText);
+
+            return Json(student);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetTransferHistoryByStudentId()
+        {
+            try
+            {
+                var history = await _admissionService.GetTransferHistoryByStudentId();
+                return Json(history);
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> SaveTransfer([FromBody] TransferModel model)
+        {
+            try
+            {
+                var result =  await _admissionService.SaveTransferAsync(model);
+
+                return Json(new
+                {
+                    success = true,
+                    data = result,
+                    message = "Transfer Saved Successfully"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+        }
     }
 }
 

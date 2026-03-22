@@ -132,5 +132,74 @@ public class AdmissionService : IAdmissionService
 
         return result?.Data;
     }
+    public async Task<List<TransferModel>> GetTransferHistoryByStudentId()
+    {
+        try
+        {
+            var response = await _httpClient
+                .GetAsync("api/AdmissionApi/GetTransferHistoryByStudentId");
 
+            if (!response.IsSuccessStatusCode)
+                return new List<TransferModel>();
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var result = JsonSerializer.Deserialize<ApiResponsetransfer<List<TransferModel>>>(
+                json,
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+            return result?.Data ?? new List<TransferModel>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return new List<TransferModel>();
+        }
+    }
+    public async Task<StudentModel> GetStudentBySearch(string searchText)
+    {
+        var response = await _httpClient.GetAsync($"api/AdmissionApi/GetStudentBySearch?searchText={searchText}");
+
+        response.EnsureSuccessStatusCode();
+
+        var json = await response.Content.ReadAsStringAsync();
+
+        var result = JsonSerializer.Deserialize<ApiResponse<StudentModel>>(
+            json,
+            new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+        return result?.Data;
+    }
+    public async Task<bool> SaveTransferAsync(TransferModel transferDto)
+    {
+        try
+        {
+            var jsonContent = new StringContent(JsonSerializer.Serialize(transferDto),Encoding.UTF8,"application/json");
+
+            var response = await _httpClient.PostAsync("api/AdmissionApi/SaveTransfer",jsonContent);
+
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            var result = JsonSerializer.Deserialize<ApiResponse<bool>>(
+                    json,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    });
+
+            return result.Data;
+        }
+        catch
+        {
+            return false;
+        }
+    }
 }   

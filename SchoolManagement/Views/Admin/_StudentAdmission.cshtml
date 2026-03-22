@@ -322,3 +322,56 @@
     });
 
 </script>
+
+<script>
+        document.addEventListener("DOMContentLoaded", async function(){
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const studentId = urlParams.get("studentId");
+
+        if(studentId){
+
+            try{
+                const res = await fetch(`/Admin/GetStudentById?id=${studentId}`);
+                const data = await res.json();
+
+                // ❌ agar list hota to data[0]
+                // ✅ ab direct object hai
+                if(data){
+
+                    // hidden field
+                    document.getElementById("StudentId").value = data.studentId;
+
+                    // form fill
+                    document.getElementById("schoolCode").value = data.schoolCode || "";
+                    document.getElementById("classSelect").value = data.class || "";
+                    document.getElementById("sessionSelect").value = data.session || "";
+                    document.getElementById("registrationNumber").value = data.registrationNumber || "";
+                    document.getElementById("StudentName").value = data.studentName || "";
+
+                    document.querySelector('[name="AdmissionDate"]').value = data.admissionDate?.split("T")[0] || "";
+                    document.querySelector('[name="RollNumber"]').value = data.rollNumber || "";
+                    document.querySelector('[name="Section"]').value = data.section || "";
+
+                    document.querySelector('[name="FatherName"]').value = data.fatherName || "";
+                    document.querySelector('[name="MotherName"]').value = data.motherName || "";
+                    document.querySelector('[name="ParentPhone"]').value = data.parentPhone || "";
+
+                    document.querySelector('[name="DateOfBirth"]').value = data.dateOfBirth?.split("T")[0] || "";
+                    document.querySelector('[name="Gender"]').value = data.gender || "";
+                    document.querySelector('[name="Email"]').value = data.studentEmail || "";
+
+                    // button change
+                    const saveBtn = document.getElementById("saveBtn");
+                    saveBtn.innerHTML = '<i class="fa fa-edit"></i> Update';
+
+                    // title change
+                    document.querySelector("h4").innerText = "Edit Student Admission";
+                }
+
+            }catch{
+                toastr.error("Error loading student data");
+            }
+        }
+    });
+</script>
