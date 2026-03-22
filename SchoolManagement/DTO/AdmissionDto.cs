@@ -72,6 +72,14 @@
 
         public T Data { get; set; }
     }
+    public class ApiResponsetransfer<T>
+    {
+        public bool Success { get; set; }
+
+        public T Data { get; set; }
+
+        public string Message { get; set; }
+    }
 
     public class TodayStudentStatusDto
     {
@@ -93,5 +101,20 @@
         public string Section { get; set; }
         public DateTime Date { get; set; }
     }
-
+    public class TransferModel
+    {
+        public int TransferId { get; set; }
+        public int StudentId { get; set; }
+        public string StudentName { get; set; }
+        public DateTime AdmissionDate { get; set; }
+        public int TransferType { get; set; }
+        public DateTime TransferDate { get; set; }
+        public string FromClass { get; set; }
+        public string FromSection { get; set; }
+        public string ToClass { get; set; }
+        public string ToSection { get; set; }
+        public string TransferReason { get; set; }
+        public bool Status { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
 }

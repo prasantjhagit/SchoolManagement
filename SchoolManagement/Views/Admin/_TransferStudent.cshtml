@@ -1,170 +1,347 @@
 ﻿@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <div class="container-fluid">
 
-    <!-- 🔷 PAGE HEADER -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h4 class="fw-bold mb-0">Student Transfer</h4>
-            <small class="text-muted">Manage student movement & transfer records</small>
-        </div>
+    <!-- 🔷 HEADER -->
+    <div class="mb-4">
+        <h4 class="fw-bold mb-0">
+            Student Transfer
+        </h4>
+        <small class="text-muted">
+            Manage student transfer details
+        </small>
     </div>
 
-    <!-- 🔷 SEARCH BAR -->
+    <!-- Hidden StudentId -->
+    <input type="hidden" id="StudentId" />
+
+    <!-- 🔷 SEARCH (Always Visible) -->
     <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
-
             <div class="row g-3 align-items-end">
-
-                <div class="col-md-5">
-                    <label class="form-label">Search Student</label>
-                    <input type="text" class="form-control" placeholder="Enter name or roll number">
+                <div class="col-md-4">
+                    <label class="form-label">
+                        Search Student
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           id="txtStudentSearch"
+                           placeholder="Enter Student ID or Roll No">
                 </div>
-
                 <div class="col-md-2">
-                    <button class="btn btn-primary w-100">
-                        <i class="fa fa-search"></i> Search
+                    <button class="btn btn-primary w-100"
+                            id="btnFetch">
+                        <i class="fa fa-search"></i>
+                        Fetch
                     </button>
                 </div>
-
             </div>
-
         </div>
     </div>
 
-    <!-- 🔷 STUDENT INFO CARD -->
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body d-flex justify-content-between align-items-center">
-
-            <div>
-                <h5 class="fw-bold mb-1">Rahul Sharma</h5>
-                <p class="text-muted mb-0">Roll: 101 | Class: 10 - Section A</p>
-            </div>
-
-            <span class="badge bg-success px-3 py-2">Active</span>
-
-        </div>
-    </div>
-
-    <!-- 🔷 TRANSFER FORM -->
-    <div class="card shadow-sm border-0 mb-4">
+    <!-- 🔷 TRANSFER DETAILS CARD -->
+    <div class="card shadow-sm border-0 mb-4"
+         id="transferCard"
+         style="display:none;">
         <div class="card-body">
-
-            <h6 class="fw-bold mb-3">Transfer Details</h6>
-
-            <div class="row g-3">
-
-                <div class="col-md-3">
-                    <label class="form-label">Transfer Type</label>
-                    <select class="form-select">
-                        <option>Internal Transfer</option>
-                        <option>School Transfer (TC)</option>
-                        <option>Drop / Leave</option>
-                    </select>
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label">New Class</label>
-                    <select class="form-select">
-                        <option>Class 10</option>
-                        <option>Class 9</option>
-                    </select>
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label">New Section</label>
-                    <select class="form-select">
-                        <option>A</option>
-                        <option>B</option>
-                    </select>
-                </div>
-
-                <div class="col-md-3">
-                    <label class="form-label">Transfer Date</label>
-                    <input type="date" class="form-control">
-                </div>
-
-                <div class="col-md-12">
-                    <label class="form-label">Reason</label>
-                    <textarea class="form-control" rows="3" placeholder="Enter transfer reason..."></textarea>
-                </div>
-
-                <div class="col-md-12 text-end">
-                    <button class="btn btn-danger px-4">
-                        <i class="fa fa-right-left"></i> Confirm Transfer
-                    </button>
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
-    <!-- 🔷 TRANSFER HISTORY -->
-    <div class="card shadow-sm border-0">
-
-        <div class="card-body">
-
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="fw-bold mb-0">Transfer History</h6>
-                <button class="btn btn-sm btn-outline-secondary">
-                    <i class="fa fa-file-export"></i> Export
-                </button>
-            </div>
-
+            <h6 class="fw-bold mb-3">
+                Transfer Details
+            </h6>
             <div class="table-responsive">
-
-                <table class="table table-hover align-middle text-center">
-
+                <table class="table table-bordered text-center">
                     <thead class="table-light">
                         <tr>
-                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Roll</th>
+                            <th>Class</th>
+                            <th>Section</th>
+                            <th>To Class</th>
+                            <th>To Section</th>
                             <th>Type</th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Reason</th>
-                            <th>Status</th>
+                            <th>Date</th>
                         </tr>
                     </thead>
-
-                    <tbody>
-
-                        <tr>
-                            <td>01 Jan 2025</td>
-                            <td><span class="badge bg-primary">Internal</span></td>
-                            <td>10-A</td>
-                            <td>10-B</td>
-                            <td>Section change</td>
-                            <td><span class="badge bg-success">Completed</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>15 Feb 2025</td>
-                            <td><span class="badge bg-danger">TC</span></td>
-                            <td>10-B</td>
-                            <td>Other School</td>
-                            <td>Parent request</td>
-                            <td><span class="badge bg-success">Completed</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>10 Mar 2025</td>
-                            <td><span class="badge bg-warning text-dark">Drop</span></td>
-                            <td>10-A</td>
-                            <td>-</td>
-                            <td>Left school</td>
-                            <td><span class="badge bg-secondary">Closed</span></td>
-                        </tr>
-
-                    </tbody>
-
+                    <tbody id="studentTransferRow"></tbody>
                 </table>
-
             </div>
 
-        </div>
+            <!-- Reason -->
+            <div class="mt-3">
+                <label class="form-label fw-semibold">
+                    Transfer Reason
+                </label>
+                <textarea class="form-control"
+                          rows="3"
+                          id="TransferReason"></textarea>
+            </div>
 
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between mt-3">
+                <button class="btn btn-secondary px-4"
+                        id="btnDeleteStudent"
+                        style="display:none;">
+                    <i class="fa fa-trash"></i>
+                    Delete Student
+                </button>
+
+                <button class="btn btn-danger px-4"
+                        id="btnConfirmTransfer">
+                    <i class="fa fa-right-left"></i>
+                    Confirm Transfer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔷 HISTORY CARD -->
+    <div class="card shadow-sm border-0"
+         id="historyCard"
+         style="display:none;">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3">
+                Transfer History
+            </h6>
+            <div class="table-responsive">
+                <table class="table table-hover text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>TransferId</th>
+                            <th>StudentName</th>
+                            <th>StudentId</th>
+                            <th>AdmissionDate</th>
+                            <th>TransferType</th>
+                            <th>TransferDate</th>
+                            <th>FromClass</th>
+                            <th>FromSection</th>
+                            <th>ToClass</th>
+                            <th>ToSection</th>
+                            <th>TransferReason</th>
+                            <th>Status</th>
+                            <th>CreatedAt</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transferHistoryBody"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 </div>
+
+<script>
+        $(document).ready(function () {
+
+            // 🔷 On page load, hide history if empty
+            checkHistory();
+            fetchTransferHistory();
+
+            // 🔷 FETCH STUDENT
+            $("#btnFetch").click(function () {
+                var searchText = $("#txtStudentSearch").val();
+                if (!searchText) { alert("Enter Student ID or Roll No"); return; }
+
+                $.ajax({
+                    url: '/Admin/GetStudentBySearch',
+                    type: 'GET',
+                    data: { searchText: searchText },
+                    success: function (response) {
+                        if (response.studentId > 0) {
+                            $("#transferCard").show();
+                            $("#StudentId").val(response.studentId);
+
+                            var row = `
+    <tr>
+    <td class="fw-semibold text-primary">${response.studentName}</td>
+    <td>${response.rollNumber}</td>
+    <td>${response.class}</td>
+    <td>${response.section}</td>
+    <td>
+    <select class="form-select form-select-sm" id="ToClass">
+    <option value="">Select</option>
+    <option>1</option><option>2</option><option>3</option>
+    <option>4</option><option>5</option><option>6</option>
+    <option>7</option><option>8</option><option>9</option>
+    <option>10</option>
+    </select>
+    </td>
+    <td>
+    <select class="form-select form-select-sm" id="ToSection">
+    <option value="">Select</option>
+    <option>A</option><option>B</option>
+    <option>C</option><option>D</option>
+    </select>
+    </td>
+    <td>
+    <select class="form-select form-select-sm" id="TransferType">
+    <option value="">Select</option>
+    <option value="1">Internal</option>
+    <option value="2">TC</option>
+    <option value="3">Drop</option>
+    </select>
+    </td>
+    <td>
+    <input type="date" class="form-control form-control-sm" id="TransferDate">
+    </td>
+    </tr>`;
+                            $("#studentTransferRow").html(row);
+
+                            // 🔷 Fetch history for this student
+                            
+                        } else { alert("Student not found"); }
+                    },
+                    error: function (xhr) {
+                        alert("Error fetching student: " + xhr.responseText);
+                    }
+                });
+            });
+
+            // 🔷 CONFIRM TRANSFER
+            $("#btnConfirmTransfer").click(function () {
+                const now = new Date().toISOString(); // ⚡ define now
+
+                var model = {
+                    transferId: 0,
+                    studentId: parseInt($("#StudentId").val()) || 0,
+                    studentName: $("#txtStudentSearch").val() || "",
+                    admissionDate: now,
+                    transferType: parseInt($("#TransferType").val()) || 0,
+                    transferDate: $("#TransferDate").val() || now,
+                    fromClass: "",
+                    fromSection: "",
+                    toClass: $("#ToClass").val() || "",
+                    toSection: $("#ToSection").val() || "",
+                    reason: $("#TransferReason").val().trim() || "",
+                    status: true,
+                    createdAt: now
+                };
+
+                if (!model.studentId || !model.transferType || !model.transferDate || !model.toClass || !model.toSection) {
+                    alert("Please fill all required fields."); return;
+                }
+
+                $.ajax({
+                    url: '/Admin/SaveTransfer',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(model),
+                    success: function (response) {
+                        if (response.success) {
+                            $("#btnDeleteStudent").show();
+                            addTransferRow(
+                                response.data.transferId,
+                                response.data.studentName,
+                                response.data.studentId,
+                                response.data.admissionDate,
+                                response.data.transferType,
+                                response.data.transferDate,
+                                response.data.fromClass,
+                                response.data.fromSection,
+                                response.data.toClass,
+                                response.data.toSection,
+                                response.data.reason,
+                                response.data.status,
+                                response.data.createdAt
+                            );
+                            $("#historyCard").show();
+                            alert("Transfer Saved");
+                        } else {
+                            alert(response.message || "Failed to save transfer");
+                        }
+                    },
+                    error: function (xhr) {
+                        alert("Error: " + xhr.responseText);
+                    }
+                });
+            });
+
+            // 🔷 Fetch Transfer History
+            function fetchTransferHistory(studentId) {
+                debugger;
+                $.ajax({
+                    url: '/Admin/GetTransferHistoryByStudentId',
+                    type: 'GET',
+                    success: function (history) {
+                        debugger;
+                        $("#transferHistoryBody").empty();
+                        if (history && history.length > 0) {
+                            history.forEach(function (t) {
+                                addTransferRow(
+                                    t.transferId, t.studentName, t.studentId, t.admissionDate,
+                                    t.transferType, t.transferDate, t.fromClass, t.fromSection,
+                                    t.toClass, t.toSection, t.transferReason, t.status, t.createdAt
+                                );
+                            });
+                            $("#historyCard").show();
+                        } else {
+                            $("#historyCard").hide();
+                        }
+                    },
+                    error: function (xhr) {
+                        alert("Error fetching history: " + xhr.responseText);
+                    }
+                });
+            }
+
+            // 🔷 Add Transfer Row
+              function addTransferRow(transferId, studentName, studentId, admissionDate,
+                            type, transferDate, fromClass, fromSection,
+                            toClass, toSection, reason, status, createdAt) {
+
+        var typeText = type == 1 ? "Internal"
+                       : type == 2 ? "TC"
+                       : "Drop";
+
+        var statusText = status ? "Completed" : "Pending";
+
+        // 🔷 Format Dates
+        var formattedAdmissionDate = formatDate(admissionDate);
+        var formattedTransferDate = formatDate(transferDate);
+        var formattedCreatedAt = formatDate(createdAt);
+
+        var row = `
+    <tr>
+    <td>${transferId}</td>
+    <td>${studentName}</td>
+    <td>${studentId}</td>
+    <td>${formattedAdmissionDate}</td>
+    <td>${typeText}</td>
+    <td>${formattedTransferDate}</td>
+    <td>${fromClass}</td>
+    <td>${fromSection}</td>
+    <td>${toClass}</td>
+    <td>${toSection}</td>
+    <td>${reason}</td>
+    <td>${statusText}</td>
+    <td>${formattedCreatedAt}</td>
+    </tr>`;
+
+        $("#transferHistoryBody").prepend(row);
+    }
+        function formatDate(dateString) {
+        if (!dateString) return "";
+
+        var date = new Date(dateString);
+
+        var day = String(date.getDate()).padStart(2, '0');
+        var month = String(date.getMonth() + 1).padStart(2, '0');
+        var year = date.getFullYear();
+
+        return `${day}-${month}-${year}`;
+    }
+
+            // 🔷 Check history card on page load
+            function checkHistory() {
+                if ($("#transferHistoryBody tr").length > 0) {
+                    $("#historyCard").show();
+                } else {
+                    $("#historyCard").hide();
+                }
+            }
+
+        });
+</script>

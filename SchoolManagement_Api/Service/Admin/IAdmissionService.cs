@@ -15,5 +15,8 @@ namespace SchoolManagement_Api.Service.Admin
         Task<List<StudentModel>> GetStudents();
         Task<List<TodayStudentStatusDto>> GetTodayStudentStatus();
         Task<Student> GetStudentById(int id);
+        Task<List<TransferModelDto>> GetTransferHistoryByStudent();
+        Task<Student> GetStudentBySearch(string searchText);
+        Task<bool> SaveTransferAsync(TransferModelDto studentTransfer);
     }
 }

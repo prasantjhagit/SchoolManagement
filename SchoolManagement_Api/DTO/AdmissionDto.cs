@@ -196,7 +196,7 @@ namespace SchoolManagement_Api.DTO
 
     public class StudentAttendance
     {
-        [Key] 
+        [Key]
         public int AttendanceId { get; set; }
 
         [ForeignKey("Student")]
@@ -212,6 +212,38 @@ namespace SchoolManagement_Api.DTO
 
         public Student Student { get; set; }
     }
-
-
+    [Table("StudentTransfers")]
+    public class StudentTransfers
+    {
+        [Key]
+        public int TransferId { get; set; }
+        public string StudentName { get; set; }
+        public int StudentId { get; set; }
+        public DateTime AdmissionDate { get; set; }
+        public int TransferType { get; set; }
+        public DateTime TransferDate { get; set; }
+        public string FromClass { get; set; }
+        public string FromSection { get; set; }
+        public string ToClass { get; set; }
+        public string ToSection { get; set; }
+        public string TransferReason { get; set; }
+        public bool Status { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+    public class TransferModelDto
+    {
+        public int TransferId { get; set; }
+        public int StudentId { get; set; }
+        public string StudentName { get; set; }
+        public DateTime AdmissionDate { get; set; }
+        public int TransferType { get; set; }
+        public DateTime TransferDate { get; set; }
+        public string FromClass { get; set; }
+        public string FromSection { get; set; }
+        public string ToClass { get; set; }
+        public string ToSection { get; set; }
+        public string Reason { get; set; }
+        public bool Status { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
 }

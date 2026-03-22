@@ -79,7 +79,7 @@ namespace SchoolManagement_Api.Reposirty.Admin
             var student = await _db.Students.FindAsync(studentId);
             if (student != null)
             {
-              //  student.PhotoPath = photoPath;
+                //  student.PhotoPath = photoPath;
                 student.UpdatedAt = DateTime.Now;
                 await _db.SaveChangesAsync();
             }
@@ -173,7 +173,7 @@ namespace SchoolManagement_Api.Reposirty.Admin
 
                 return students;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 return null;
             }
@@ -181,7 +181,7 @@ namespace SchoolManagement_Api.Reposirty.Admin
             {
 
             }
-           
+
         }
         public async Task<Student> GetStudentById(int id)
         {
@@ -190,9 +190,90 @@ namespace SchoolManagement_Api.Reposirty.Admin
                 return await _db.Students
                     .FirstOrDefaultAsync(x => x.StudentId == id);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+        public async Task<Student> GetStudentBySearch(string searchText)
+        {
+            try
+            {
+                return await _db.Students
+                    .FirstOrDefaultAsync(x =>
+                        x.StudentId.ToString() == searchText ||
+                        x.RollNumber == searchText);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public async Task<List<TransferModelDto>> GetTransferHistoryByStudent()
+        {
+            try
+            {
+                return await _db.StudentTransfer
+                    .OrderByDescending(t => t.TransferDate)
+                    .Select(t => new TransferModelDto
+                    {
+                        TransferId = t.TransferId,
+                        StudentId = t.StudentId,
+                        StudentName = t.StudentName,
+                        AdmissionDate = t.AdmissionDate,
+                        TransferType = t.TransferType,
+                        TransferDate = t.TransferDate,
+                        FromClass = t.FromClass,
+                        FromSection = t.FromSection,
+                        ToClass = t.ToClass,
+                        ToSection = t.ToSection,
+                        Reason = t.TransferReason,
+                        Status = t.Status,
+                        CreatedAt = t.CreatedAt
+                    }).ToListAsync();
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
+        public async Task<bool> SaveTransferAsync(TransferModelDto model)
+        {
+            try
+            {
+                var student = await _db.Students.FirstOrDefaultAsync(x => x.StudentId == model.StudentId);
+                if (student == null)
+                {
+                    return false;
+                }
+                var transfer = new StudentTransfers
+                {
+                    StudentId = model.StudentId,
+                    StudentName = student.StudentName,
+                    AdmissionDate = student.AdmissionDate,
+                    TransferType = model.TransferType,
+                    TransferDate = model.TransferDate,
+                    FromClass = student.Class,
+                    FromSection = student.Section,
+                    ToClass = model.ToClass,
+                    ToSection = model.ToSection,
+                    TransferReason = model.Reason,
+                    Status = true,
+                    CreatedAt = DateTime.Now
+                };
+
+                await _db.StudentTransfer.AddAsync(transfer);
+                if (model.TransferType == 2)
+                {
+                    student.Class = model.ToClass;
+                    student.Section = model.ToSection;
+                }
+                await _db.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
     }

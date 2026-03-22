@@ -40,5 +40,17 @@ namespace SchoolManagement_Api.Service.Admin
         {
             return await _repo.GetStudentById(id);
         }
+        public async Task<List<TransferModelDto>> GetTransferHistoryByStudent()
+        {
+            return await _repo.GetTransferHistoryByStudent();
+        }
+        public async Task<Student> GetStudentBySearch(string searchText)
+        {
+            return await _repo.GetStudentBySearch(searchText);
+        }
+        public async Task<bool> SaveTransferAsync(TransferModelDto studentTransfer)
+        {
+            return await _repo.SaveTransferAsync(studentTransfer);
+        }
     }
 }
