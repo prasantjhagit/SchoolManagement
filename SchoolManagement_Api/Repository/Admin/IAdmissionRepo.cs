@@ -4,17 +4,10 @@ namespace SchoolManagement_Api.Reposirty.Admin
 {
     public interface IAdmissionRepo
     {
-        // Save student admission data only (no files)
         Task<int> AddNewAdmission(AdmissionDto admissionDto);
-
-        // Optional: separate method for updating photo path
-        Task UpdatePhotoPathAsync(int studentId, string photoPath);
-
-        // Optional: separate method for adding documents
-        Task AddDocumentsAsync(int studentId, List<DocumentDto> documents);
         Task<List<StudentModel>> GetStudents();
-
         Task<List<TodayStudentStatusDto>> GetTodayStudentStatus();
         Task<Student> GetStudentById(int studentId);
+        Task AddDocumentAsync(DocumentUploadDto document);
     }
 }

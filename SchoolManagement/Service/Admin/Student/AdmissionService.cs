@@ -28,57 +28,104 @@ public class AdmissionService : IAdmissionService
             new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
     }
 
-    // 1️⃣ Save basic admission data
-    public async Task<int> AddNewAdmissionAsync(
-      AdmissionDto admissionDto,
-      IFormFile studentPhoto,
-      List<IFormFile> documentFiles)
+    public async Task<int> AddNewAdmissionAsync(AdmissionDto admissionDto,IFormFile studentPhoto,List<IFormFile> documentFiles)
     {
         var json = JsonSerializer.Serialize(admissionDto);
-
         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
         var response = await _httpClient.PostAsync("api/AdmissionApi/CreateAdmission", content);
-
         var result = await response.Content.ReadAsStringAsync();
 
         if (!response.IsSuccessStatusCode)
             throw new Exception(result);
-        int studentId = 0;
-        //if (studentPhoto != null)
-        //    await UploadPhotoAsync(studentId, studentPhoto);
 
-        //if (documentFiles != null && documentFiles.Count > 0)
-        //    await UploadDocumentsAsync(studentId, documentFiles);
+        var apiResponse = JsonSerializer.Deserialize<AdmissionResponseDto>(
+            result,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+        );
 
-        return studentId;
-    }
+        if (apiResponse == null || !apiResponse.Success)
+            throw new Exception(apiResponse?.Message ?? "API failed");
 
-    private async Task UploadPhotoAsync(int studentId, IFormFile photo)
-    {
-        var form = new MultipartFormDataContent();
-
-        form.Add(new StreamContent(photo.OpenReadStream()), "studentPhoto", photo.FileName);
-        form.Add(new StringContent(studentId.ToString()), "studentId");
-
-        var response = await _httpClient.PostAsync("api/Admission/UploadPhoto", form);
-
-        response.EnsureSuccessStatusCode();
-    }
-    private async Task UploadDocumentsAsync(int studentId, List<IFormFile> files)
-    {
-        var form = new MultipartFormDataContent();
-
-        foreach (var file in files)
+        int studentId = apiResponse.StudentId;
+        if (studentPhoto != null && studentPhoto.Length > 0)
         {
-            form.Add(new StreamContent(file.OpenReadStream()), "documentFiles", file.FileName);
+            var extension = Path.GetExtension(studentPhoto.FileName).ToLower();
+
+            if (extension != ".png")
+                throw new Exception("Only PNG image allowed");
+
+            var photoFolder = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                "uploads",
+                "students",
+                "photos"
+            );
+
+            if (!Directory.Exists(photoFolder))
+                Directory.CreateDirectory(photoFolder);
+
+            var fileName = $"student_{studentId}.png";
+            var filePath = Path.Combine(photoFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await studentPhoto.CopyToAsync(stream);
+            }
+
+            await UploadDocumentEntryAsync(
+                studentId,
+                "Student Photo",
+                "",
+                $"/uploads/students/photos/{fileName}",
+                admissionDto
+            );
+        }
+        if (documentFiles != null && documentFiles.Count > 0)
+        {
+            var docFolder = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot",
+                "uploads",
+                "students",
+                "documents"
+            );
+
+            if (!Directory.Exists(docFolder))
+                Directory.CreateDirectory(docFolder);
+
+            int index = 1;
+
+            foreach (var file in documentFiles)
+            {
+                if (file == null || file.Length == 0)
+                    continue;
+
+                var extension = Path.GetExtension(file.FileName).ToLower();
+                if (extension != ".pdf" && extension != ".png" && extension != ".jpg" && extension != ".jpeg")
+                    throw new Exception("Only PDF/Image files allowed");
+
+                var fileName = $"doc_{studentId}_{index}{extension}";
+                var filePath = Path.Combine(docFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                await UploadDocumentEntryAsync(
+                    studentId,
+                    "Aadhar Card", 
+                    "",         
+                    $"/uploads/students/documents/{fileName}",
+                    admissionDto
+                );
+
+                index++;
+            }
         }
 
-        form.Add(new StringContent(studentId.ToString()), "studentId");
-
-        var response = await _httpClient.PostAsync("api/Admission/UploadDocuments", form);
-
-        response.EnsureSuccessStatusCode();
+        return studentId;
     }
     public async Task<List<StudentModel>> GetStudents()
     {
@@ -97,7 +144,6 @@ public class AdmissionService : IAdmissionService
 
         return result?.Data ?? new List<StudentModel>();
     }
-
     public async Task<List<TodayStudentStatusDto>> GetTodayStudentStatus()
     {
         var response = await _httpClient.GetAsync("api/AdmissionApi/GetTodayStudentStatus");
@@ -131,6 +177,27 @@ public class AdmissionService : IAdmissionService
             });
 
         return result?.Data;
+    }
+    private async Task UploadDocumentEntryAsync(int studentId,string documentType,string documentNumber,string filePath,AdmissionDto admissionDto)
+    {
+        var docDto = new DocumentUploadDto
+        {
+            StudentId = studentId,
+            DocumentType = documentType,
+            DocumentNumber = documentNumber,
+            FilePath = filePath,
+            Class = admissionDto.Class,
+            Section = admissionDto.Section
+        };
+
+        var json = JsonSerializer.Serialize(docDto);
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+        var response = await _httpClient.PostAsync("api/AdmissionApi/UploadDocumentEntry", content);
+        var result = await response.Content.ReadAsStringAsync();
+
+        if (!response.IsSuccessStatusCode)
+            throw new Exception(result);
     }
 
 }   

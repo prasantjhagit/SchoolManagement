@@ -5,6 +5,7 @@ namespace SchoolManagement_Api.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.EntityFrameworkCore;
     using SchoolManagement_Api.DTO;
     using SchoolManagement_Api.Reposirty.Admin;
     using SchoolManagement_Api.Service.Admin;
@@ -42,56 +43,6 @@ namespace SchoolManagement_Api.Controllers
             {
                 return StatusCode(500, new { Success = false, Message = ex.Message });
             }
-        }
-
-        [HttpPost("UploadPhoto")]
-        public async Task<IActionResult> UploadPhoto(IFormFile studentPhoto, int studentId)
-        {
-            if (studentPhoto == null)
-                return BadRequest("Photo required");
-
-            var folder = Path.Combine("", "uploads/photos");
-
-            if (!Directory.Exists(folder))
-                Directory.CreateDirectory(folder);
-
-            var fileName = $"{studentId}_{studentPhoto.FileName}";
-            var path = Path.Combine(folder, fileName);
-
-            using (var stream = new FileStream(path, FileMode.Create))
-            {
-                await studentPhoto.CopyToAsync(stream);
-            }
-
-            return Ok(new { Success = true });
-        }
-        [HttpPost("UploadDocuments")]
-        public async Task<IActionResult> UploadDocuments(int studentId, List<IFormFile> documentFiles, [FromForm] List<DocumentDto> documents)
-        {
-            if (documentFiles == null || documentFiles.Count == 0)
-                return BadRequest("No documents uploaded");
-
-            var folder = Path.Combine("", "uploads/documents");
-
-            if (!Directory.Exists(folder))
-                Directory.CreateDirectory(folder);
-
-            for (int i = 0; i < documentFiles.Count; i++)
-            {
-                var file = documentFiles[i];
-
-                var fileName = $"{studentId}_{file.FileName}";
-                var path = Path.Combine(folder, fileName);
-
-                using (var stream = new FileStream(path, FileMode.Create))
-                {
-                    await file.CopyToAsync(stream);
-                }
-
-                // Save document info to DB if needed
-            }
-
-            return Ok(new { Success = true });
         }
         [HttpGet("GetStudents")]
         public async Task<IActionResult> GetStudents()
@@ -151,6 +102,20 @@ namespace SchoolManagement_Api.Controllers
                 success = true,
                 data = result
             });
+        }
+
+        [HttpPost("UploadDocumentEntry")]
+        public async Task<IActionResult> UploadDocumentEntry([FromBody] DocumentUploadDto dto)
+        {
+            try
+            {
+                await _admissionService.AddDocumentAsync(dto);
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
         }
     }
 }

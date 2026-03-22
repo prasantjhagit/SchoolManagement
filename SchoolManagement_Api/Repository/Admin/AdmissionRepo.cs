@@ -73,38 +73,6 @@ namespace SchoolManagement_Api.Reposirty.Admin
                 throw;
             }
         }
-
-        public async Task UpdatePhotoPathAsync(int studentId, string photoPath)
-        {
-            var student = await _db.Students.FindAsync(studentId);
-            if (student != null)
-            {
-              //  student.PhotoPath = photoPath;
-                student.UpdatedAt = DateTime.Now;
-                await _db.SaveChangesAsync();
-            }
-        }
-
-        public async Task AddDocumentsAsync(int studentId, List<DocumentDto> documents)
-        {
-            if (documents == null || documents.Count == 0) return;
-
-            foreach (var doc in documents)
-            {
-                var document = new StudentDocument
-                {
-                    StudentId = studentId,
-                    DocumentType = doc.DocumentType,
-                    DocumentNumber = doc.DocumentNumber,
-                    FilePath = doc.FilePath,
-                    UploadDate = DateTime.Now
-                };
-
-                await _db.StudentDocuments.AddAsync(document);
-            }
-
-            await _db.SaveChangesAsync();
-        }
         public async Task<List<StudentModel>> GetStudents()
         {
             var students = await _db.Students
@@ -194,6 +162,26 @@ namespace SchoolManagement_Api.Reposirty.Admin
             {
                 throw ex;
             }
+        }
+
+        public async Task AddDocumentAsync(DocumentUploadDto dto)
+        {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto));
+
+            var entity = new StudentDocument
+            {
+                StudentId = dto.StudentId,
+                DocumentType = dto.DocumentType,
+                DocumentNumber = dto.DocumentNumber,
+                FilePath = dto.FilePath,
+                UploadDate = DateTime.Now,
+                Section=dto.Section,
+                Class = dto.Class
+            };
+
+            await _db.StudentDocuments.AddAsync(entity);
+            await _db.SaveChangesAsync();
         }
     }
 

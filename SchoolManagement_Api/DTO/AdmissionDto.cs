@@ -38,6 +38,7 @@ namespace SchoolManagement_Api.DTO
     public class Student
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // ✅ ADD THIS
         public int StudentId { get; set; }
 
         [Required, MaxLength(20)]
@@ -91,6 +92,7 @@ namespace SchoolManagement_Api.DTO
         public ICollection<StudentDocument> Documents { get; set; }
         public ICollection<StudentAttendance> StudentAttendances { get; set; }
 
+
     }
 
     public class StudentAddress
@@ -142,6 +144,8 @@ namespace SchoolManagement_Api.DTO
         public DateTime UploadDate { get; set; }
 
         public Student Student { get; set; }
+        public string Section { get; set; }
+        public string Class { get; set; }
     }
     public class StudentModel
     {
@@ -212,6 +216,14 @@ namespace SchoolManagement_Api.DTO
 
         public Student Student { get; set; }
     }
-
+    public class DocumentUploadDto
+    {
+        public int StudentId { get; set; }
+        public string DocumentType { get; set; }
+        public string DocumentNumber { get; set; }
+        public string FilePath { get; set; }
+        public string Class { get; set; }
+        public string Section { get; set; }
+    }
 
 }

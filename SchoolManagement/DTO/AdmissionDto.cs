@@ -93,5 +93,22 @@
         public string Section { get; set; }
         public DateTime Date { get; set; }
     }
+    
+
+    public class DocumentUploadDto
+    {
+        public int StudentId { get; set; }
+        public string DocumentType { get; set; }
+        public string DocumentNumber { get; set; }
+        public string FilePath { get; set; }
+        public string Class { get; set; }
+        public string Section { get; set; }
+    }
+    public class AdmissionResponseDto
+    {
+        public bool Success { get; set; }
+        public int StudentId { get; set; }
+        public string Message { get; set; }
+    }
 
 }

@@ -2,7 +2,14 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
     ViewData["Title"] = "New Student Admission";
 }
+<!-- ✅ jQuery FIRST -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
+<!-- ✅ Toastr CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
+<!-- ✅ Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <style>
     body {
         background: #f4f6f9;
@@ -67,6 +74,10 @@
         margin-top: 10px;
         display: none;
         border-radius: 10px;
+    }
+
+    .admission-card {
+        overflow: visible !important;
     }
 </style>
 
@@ -161,13 +172,15 @@
     <div class="admission-card">
         <div class="section-title"><i class="fa fa-id-card"></i> Student Details</div>
 
-        <div class="row g-3">
+        <div class="row g-3 align-items-center">
 
-            <div class="col-md-3">
+            <!-- DOB -->
+            <div class="col-md-2">
                 <input type="date" name="DateOfBirth" class="form-control" />
             </div>
 
-            <div class="col-md-3">
+            <!-- GENDER -->
+            <div class="col-md-2">
                 <select name="Gender" class="form-select">
                     <option>Gender</option>
                     <option>Male</option>
@@ -176,13 +189,44 @@
                 </select>
             </div>
 
+            <!-- EMAIL -->
             <div class="col-md-3">
                 <input type="email" name="Email" class="form-control" placeholder="Email" />
             </div>
 
-            <div class="col-md-3">
-                <input type="file" name="studentPhoto" class="form-control" onchange="previewPhoto(event)" />
-                <img id="photoPreview" />
+            <div class="col-md-5">
+
+                <input type="file" id="studentPhotoInput" name="studentPhoto"
+                       class="form-control mb-2"
+                       accept="image/*"
+                       onchange="handlePhotoPreview(event)" />
+
+                <!-- THUMB -->
+                <div id="photoPreviewWrapper"
+                     style="display:none; position:relative; width:80px;">
+
+                    <img id="photoPreview"
+                         style="width:80px; height:80px;
+                    display:block;
+                    object-fit:cover;
+                    border:2px solid #28a745;
+                    border-radius:8px;" />
+
+                    <!-- ❌ -->
+                    <span onclick="removePhoto()"
+                          style="position:absolute; top:-8px; right:-8px;
+                     background:red; color:white;
+                     width:20px; height:20px;
+                     border-radius:50%;
+                     display:flex;
+                     align-items:center;
+                     justify-content:center;
+                     cursor:pointer;">
+                        ×
+                    </span>
+
+                </div>
+
             </div>
 
         </div>
@@ -222,7 +266,7 @@
     <div class="admission-card">
         <div class="section-title"><i class="fa fa-file-upload"></i> Address Proof Upload</div>
 
-        <div class="row g-3">
+        <div class="row g-3 align-items-center">
 
             <div class="col-md-4">
                 <select name="Documents[0].DocumentType" class="form-select">
@@ -236,10 +280,19 @@
             </div>
 
             <div class="col-md-4">
-                <input type="file" name="documentFiles" class="form-control" />
+                <input type="file" id="docFile" name="documentFiles" class="form-control"
+                       onchange="handleDocPreview(event)" />
             </div>
 
-            <div class="col-md-4">
+            <!-- 👁 VIEW BUTTON -->
+            <div class="col-md-1">
+                <button type="button" id="viewDocBtn" class="btn btn-outline-primary"
+                        onclick="openDocPreview()" style="display:none;">
+                    <i class="fa fa-eye"></i>
+                </button>
+            </div>
+
+            <div class="col-md-3">
                 <input type="text" name="Documents[0].DocumentNumber" class="form-control" placeholder="Document Number" />
             </div>
 
@@ -258,6 +311,44 @@
     </div>
 
 </form>
+
+<div class="modal fade" id="docPreviewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content" style="border-radius:12px; overflow:hidden;">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Document Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" id="docPreviewContainer"
+                 style="background:#f8f9fa; min-height:300px; display:flex; align-items:center; justify-content:center;">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="photoPreviewModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:12px; overflow:hidden;">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Photo Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center"
+                 style="background:#f8f9fa; min-height:300px; display:flex; align-items:center; justify-content:center;">
+
+                <img id="photoPreviewLarge"
+                     style="max-width:100%; max-height:500px; border-radius:10px;" />
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
@@ -304,14 +395,17 @@
         try{
             const res=await fetch('/Admin/SaveAdmission',{method:'POST',body:formData});
             const result=await res.json();
+            debugger;
+    if(result.Success){
+        toastr.success("Saved Successfully");
 
-            if(result.success){
-                toastr.success("Saved Successfully");
-                this.reset();
-                photoPreview.style.display="none";
-            }else{
-                toastr.error(result.message);
-            }
+        setTimeout(() => {
+            window.location.href = "/Admin/StudentListPartial";
+        }, 1500);
+
+    }else{
+        toastr.error(result.Message);
+    }
 
         }catch{
             toastr.error("Server Error");
@@ -321,4 +415,114 @@
         btn.innerHTML="Save";
     });
 
+        let selectedDocFile = null;
+
+    function handleDocPreview(event){
+        selectedDocFile = event.target.files[0];
+
+        if(selectedDocFile){
+            document.getElementById("viewDocBtn").style.display = "block";
+        }
+    }
+
+       function openDocPreview(){
+
+        const container = document.getElementById("docPreviewContainer");
+        container.innerHTML = "";
+
+        if(!selectedDocFile){
+            container.innerHTML = "<p>No file selected</p>";
+            return;
+        }
+
+        const fileURL = URL.createObjectURL(selectedDocFile);
+        const fileType = selectedDocFile.type;
+        const fileName = selectedDocFile.name.toLowerCase();
+
+        // IMAGE
+        if(fileType.startsWith("image/")){
+            container.innerHTML = `
+                <div style="text-align:center;">
+                    <img src="${fileURL}"
+                         style="max-width:100%; max-height:500px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.2);" />
+                </div>`;
+        }
+
+        // PDF
+        else if(fileType === "application/pdf"){
+            container.innerHTML = `
+                <iframe src="${fileURL}"
+                        width="100%"
+                        height="500px"
+                        style="border:none;border-radius:10px;">
+                </iframe>`;
+        }
+
+        // EXCEL (VIEW IN GOOGLE VIEWER)
+        else if(fileName.endsWith(".xls") || fileName.endsWith(".xlsx")){
+            container.innerHTML = `
+                <iframe
+                    src="https://docs.google.com/gview?url=${fileURL}&embedded=true"
+                    width="100%"
+                    height="500px"
+                    style="border:none;">
+                </iframe>
+                <br/>
+                <a href="${fileURL}" target="_blank" class="btn btn-success mt-2">
+                    Download Excel
+                </a>`;
+        }
+
+        // OTHER FILE
+        else{
+            container.innerHTML = `
+                <p>Preview not available</p>
+                <a href="${fileURL}" target="_blank" class="btn btn-primary">
+                    Download File
+                </a>`;
+        }
+
+        new bootstrap.Modal(document.getElementById('docPreviewModal')).show();
+    }
+                  let selectedPhotoFile = null;
+
+    function handlePhotoPreview(event){
+
+        const file = event.target.files[0];
+
+        if(!file){
+            console.log("No file selected");
+            return;
+        }
+
+        // check image type
+        if(!file.type.startsWith("image/")){
+            alert("Please select an image file");
+            return;
+        }
+
+        selectedPhotoFile = file;
+
+        const preview = document.getElementById("photoPreview");
+        const wrapper = document.getElementById("photoPreviewWrapper");
+        document.getElementById("photoPreview").style.border = "5px solid red";
+
+        const imageURL = URL.createObjectURL(file);
+
+        preview.src = imageURL;
+
+        preview.onload = () => {
+            URL.revokeObjectURL(imageURL); // memory clean
+        };
+
+        wrapper.style.display = "block";
+    }
+
+    function removePhoto(){
+
+        selectedPhotoFile = null;
+
+        document.getElementById("studentPhotoInput").value = "";
+        document.getElementById("photoPreviewWrapper").style.display = "none";
+    }
 </script>
